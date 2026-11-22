@@ -3,7 +3,7 @@
 Object.assign(SCENES, {
   end_escape_both_v00: {
     variant: { of: "end_escape_both", if: "flag('school_jungwoo_join')", priority: 10 },
-    ending: { title: "셋이서 넘은 담", grade: "S", art: "img/end/A-10.webp" },
+    ending: { title: "셋이서 넘은 담", grade: "S", art: "img/end/S-08.webp" },
     bg: "street",
     lines: [
       { t: "검문소 너머 첫 번째 마을에서, 우리는 셋이었다." },

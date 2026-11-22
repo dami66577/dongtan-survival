@@ -10,7 +10,7 @@ for(let w=0;w<N;w++){ let v=Core.newGame("나","동생"); let steps=0;
       const find=(re)=>v.choices.find(c=>re.test(c.t));
       if(v.id==="home_hub"){
         if(S.flags.sib_sick&&!S.flags.sib_cured&&Core.has("파란 상자")) pick=find(/파란 상자/);
-        if(!pick&&!S.flags.out_today){ if(S.food<4) pick=find(/상가로 간다/); if(!pick&&S.flags.sib_sick&&!S.flags.sib_cured) pick=find(/병원으로/); if(!pick&&!S.flags.went_center) pick=find(/주민센터/); if(!pick&&!S.flags.info_time) pick=find(/다원중/); if(!pick) pick=[find(/상가로/),find(/병원으로/),find(/다원중/)].filter(Boolean)[Math.floor(Math.random()*3)]; }
+        if(!pick&&!S.flags.out_today){ if(S.food<4) pick=find(/상가로 간다/); if(!pick&&S.flags.sib_sick&&!S.flags.sib_cured) pick=find(/병원으로/); if(!pick&&!S.flags.went_center) pick=find(/주민센터/); if(!pick&&!S.flags.info_time) pick=find(/중학교로/); if(!pick) pick=[find(/상가로/),find(/병원으로/),find(/중학교로/)].filter(Boolean)[Math.floor(Math.random()*3)]; }
         if(!pick&&S.day>=7) pick=find(/떠날 준비/);
         if(!pick) pick=find(/잠든다|여기까지/);
       }

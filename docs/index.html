@@ -271,7 +271,7 @@ nav.tabs { display: grid; grid-template-columns: repeat(6, 1fr); height: var(--n
 </section>
 
 <div class="toast" id="toast" role="status"><div class="ic">!</div><div><div class="h"><span>긴급재난문자</span><span id="toast-time"></span></div><div class="b" id="toast-body"></div></div></div>
-<div class="overlay" id="ov-map"><div class="sheet"><h2>가람 <button class="x" data-close>닫기</button></h2><div class="muted" id="map-status"></div><div class="map" id="map"></div><div class="map-legend"><span><i class="h"></i>현재</span><span><i class="v"></i>가 본 곳</span><span><i></i>아직</span><span>· 반나절 = 행동력 2, 한나절 = 1</span></div></div></div>
+<div class="overlay" id="ov-map"><div class="sheet"><h2>가람 <button class="x" data-close>닫기</button></h2><div class="muted" id="map-status"></div><div class="map" id="map"></div><div class="map-legend"><span><i class="h"></i>현재</span><span><i class="v"></i>가 본 곳</span><span><i></i>아직</span><span>· 한나절 = 행동력 2, 반나절 = 1</span></div></div></div>
 <div class="overlay" id="ov-bag"><div class="sheet"><h2>가방 <button class="x" data-close>닫기</button></h2>
   <div class="items" id="bag-items"></div><div class="muted" id="bag-empty">아직 아무것도 없다.</div>
   <h3>알게 된 것</h3><div class="items" id="bag-info"></div><div class="muted" id="bag-info-empty">아는 게 없다. 밖에 나가봐야 한다.</div>
@@ -803,6 +803,9 @@ Object.assign(SCENES, {
       { t: "거실. 창문 틈의 신문지가 바람에 조금씩 떨린다.", if: "S.day >= 2 && S.day <= 4" },
       { t: "거실. 벽에 금을 그어 날짜를 센다. 벌써 {{sib}}이 그은 금이 더 많다.", if: "S.day >= 5 && S.day <= 7" },
       { t: "거실. 8일째. 라디오가 말한 '토요일'이 있다면 오늘 밤이 지나면 온다.", if: "S.day === 8" },
+      { t: "{{sib}}이 라디오 다이얼을 만지작거린다. 아는 건 '토요일' 한 마디뿐이다. 학교에 남은 애들은 뭘 더 들었을까.", if: "S.day >= 3 && S.day <= 6 && !flag('info_time')" },
+      { t: "베란다 너머로 대학병원 지붕이 보인다. 그 많던 구급차들은 다 어디로 갔을까.", if: "S.day >= 4 && S.day <= 6 && !flag('hosp_ambulance')" },
+      { t: "{{sib}}이 현관 신발을 자꾸 가지런히 놓는다. 떠날 거면 지금이라는 걸, 둘 다 알고 있다.", if: "S.day >= 7 && !flag('end_started') && (flag('info_time') || flag('hosp_ambulance'))" },
       { t: "{{sib}}이 창가에 앉아 게임기 없는 손을 꼼지락거린다. 심심하다는 뜻이다.", if: "!flag('sib_sick') && S.day <= 2" },
       { t: "{{sib}}이 이불 속에서 열에 들떠 뒤척인다. 이마에 얹은 수건이 금방 미지근해진다.", if: "flag('sib_sick') && !flag('sib_cured')" },
       { t: "{{sib}}은 열이 내렸다. 아직 창백하지만 눈빛이 돌아왔다.", if: "flag('sib_cured')" },
@@ -817,13 +820,13 @@ Object.assign(SCENES, {
       { t: "무엇을 할까.", if: "!flag('out_today')" },
     ],
     choices: [
-      { t: "나란히 상가로 간다 (도로를 경계로 11자처럼 나란히 선 상가 · 식량 · 도보 15분 · 반나절)", go: "mall_enter", if: "S.ap >= 2" },
-      { t: "대학병원으로 간다 (의약품 · 도보 25분 · 반나절)", go: "hosp_enter", if: "S.ap >= 2" },
-      { t: "중학교로 간다 (정보 · 도보 10분 · 반나절)", go: "school_enter", if: "S.ap >= 2" },
-      { t: "가람호수공원으로 간다 (물 · 텐트촌 · 도보 20분 · 반나절)", go: "lake_enter", if: "S.ap >= 2 && S.day >= 2" },
-      { t: "가람역으로 간다 (북광장 · 위험 · 도보 30분 · 반나절)", go: "station_enter", if: "S.ap >= 2 && S.day >= 3" },
-      { t: "주민센터에 들른다 (바로 옆 · 한나절)", go: "center_enter", if: "S.ap >= 1" },
-      { t: "아파트 단지를 둘러본다 (우리 동 · 옆 동 · 지하주차장 · 한나절)", go: "apt_enter", if: "S.ap >= 1" },
+      { t: "나란히 상가로 간다 (도로를 경계로 11자처럼 나란히 선 상가 · 식량 · 도보 15분 · 한나절)", go: "mall_enter", if: "S.ap >= 2" },
+      { t: "대학병원으로 간다 (의약품 · 도보 25분 · 한나절)", go: "hosp_enter", if: "S.ap >= 2" },
+      { t: "중학교로 간다 (정보 · 도보 10분 · 한나절)", go: "school_enter", if: "S.ap >= 2" },
+      { t: "가람호수공원으로 간다 (물 · 텐트촌 · 도보 20분 · 한나절)", go: "lake_enter", if: "S.ap >= 2 && S.day >= 2" },
+      { t: "가람역으로 간다 (북광장 · 위험 · 도보 30분 · 한나절)", go: "station_enter", if: "S.ap >= 2 && S.day >= 3" },
+      { t: "주민센터에 들른다 (바로 옆 · 반나절)", go: "center_enter", if: "S.ap >= 1" },
+      { t: "아파트 단지를 둘러본다 (우리 동 · 옆 동 · 지하주차장 · 반나절)", go: "apt_enter", if: "S.ap >= 1" },
       { t: "[아이템: 파란 상자] 동생에게 파란 상자를 쓴다", go: "home_use_box", if: "has('파란 상자') && (flag('sib_sick') || flag('sib_bitten')) && !flag('sib_cured')" },
       { t: "[아이템: 파란 상자] 내 상처에 파란 상자를 쓴다", go: "home_use_box_me", if: "has('파란 상자') && flag('me_bitten') && !flag('me_cured') && !((flag('sib_sick') || flag('sib_bitten')) && !flag('sib_cured'))" },
       { t: "[의약품] 약을 쓴다", go: "home_use_meds", if: "S.meds > 0 && (S.sib < 60 || S.hp < 60)" },
@@ -7213,7 +7216,7 @@ Object.assign(SCENES, {
   station_platform: {
     bg: "night",
     lines: [
-      { t: "승강장. 지하. 비상등 하나가 깜빡인다. 선로에 SRT 한 편성이 서 있다. 문이 열려 있다. 전부." },
+      { t: "승강장. 지하. 비상등 하나가 깜빡인다. 선로에 고속열차 한 편성이 서 있다. 문이 열려 있다. 전부." },
       { t: "열차 안은 더 어둡다. 손전등이 있다. 켜면 보이고, 켜면 보인다.", if: "has('손전등')" },
       { t: "손전등이 없다. 비상등 불빛이 닿는 첫 칸까지만 갈 수 있다.", if: "!has('손전등')" },
     ],
@@ -9028,7 +9031,7 @@ Object.assign(SCENES, {
     lines: [
       { t: "다이얼을 돌리다 처음 듣는 목소리에 멈췄다. 어리다. 우리보다도." },
       { s: "라디오", t: "아아, 들리나요. 여기는 가람 FM. 주파수는… 몰라요, 그냥 잡히면 잡히는 거예요. 송신기는 학원 건물 옥상이고요." },
-      { s: "라디오", t: "오늘의 소식. 반송동 쪽 큰길은 차로 막혀 있어서 못 지나가요. 호수공원 쪽은 텐트 친 사람들이 있는데 낯선 사람 싫어해요. 북광장 버스는… 제가 보기엔 사흘째 그 자리예요." },
+      { s: "라디오", t: "오늘의 소식. 남쪽 동네 큰길은 차로 막혀 있어서 못 지나가요. 호수공원 쪽은 텐트 친 사람들이 있는데 낯선 사람 싫어해요. 북광장 버스는… 제가 보기엔 사흘째 그 자리예요." },
       { s: "라디오", t: "신청곡은 못 틀어요. 노래 파일이 없어서. 대신 제가 부를까요. 아니다. 안 할래요." },
       { s: "sib", t: "…야. 저거 우리 또래 아냐?" },
     ],
@@ -9768,7 +9771,7 @@ Object.assign(SCENES, {
     item: ["사진"],
     fx: { trust: 4, mind: 3 },
     lines: [
-      { t: "안방 서랍. 세 번째 칸 맨 아래. 가족사진. 작년 여름 제부도. 넷이서 찍은 마지막 사진." },
+      { t: "안방 서랍. 세 번째 칸 맨 아래. 가족사진. 작년 여름 바닷가. 넷이서 찍은 마지막 사진." },
       { t: "뒷면. 엄마 글씨. 『해원 비상대책본부 3팀 이정민. 031-…』 그리고 『외곽 농로 → 새터 → 해원』." },
       { s: "sib", t: "…이거 왜 여기다 적었어. 냉장고에 붙여 놓지." },
       { s: "me", t: "냉장고에 붙이면 누가 봐도 되니까. 서랍은 우리만 알잖아." },
@@ -10191,7 +10194,7 @@ Object.assign(SCENES, {
   // ═════════ 엔딩 ═════════
   end_ambulance: {
     bg: "night",
-    ending: { title: "구급차", grade: "S", art: "img/end/A-06.webp" },
+    ending: { title: "구급차", grade: "S", art: "img/end/S-07.webp" },
     lines: [
       { t: "해원 집결지. 체육관 바닥에 매트가 깔려 있고, 벽에 명단이 붙어 있었다. 가람 칸은 비어 있었다." },
       { t: "거기에 우리 이름을 적었다. 둘 다. 최 주무관이 보면 글씨가 삐뚤다고 했을 것이다." },
@@ -10209,7 +10212,7 @@ Object.assign(SCENES, {
 
   end_escape_both: {
     bg: "night",
-    ending: { title: "담을 넘다", grade: "S", art: "img/end/A-07.webp" },
+    ending: { title: "담을 넘다", grade: "S", art: "img/end/S-10.webp" },
     lines: [
       { t: "해원 집결지. 처음 사흘은 잠만 잤다. 동생은 하루에 열네 시간을 잤다." },
       { t: "넷째 날 동생이 게임기 배터리를 어디서 구해 왔다. 다섯째 날에는 나한테 졌다며 화를 냈다." },
@@ -10393,7 +10396,7 @@ Object.assign(SCENES, {
       { t: "엄마는 승합차 운전석에 있었다. 가람에 두 번 들어갔다가 두 번 나온 사람. 세 번째는 안 들어가도 됐다." },
       { t: "『문 두드렸을 때 왜 안 열었어』라고 엄마는 묻지 않았다. 대신 동생 이마에 손을 댔다. 그리고 내 이마에." },
       { t: "정우는 승합차 문 앞에 서 있었다. 고양이를 안고. 엄마가 손짓했다. 『너도. 타.』", if: "S.flags.school_jungwoo_join" },
-      { t: "사진을 꺼냈다. 작년 여름 제부도. 넷. 뒷면에 엄마 글씨." },
+      { t: "사진을 꺼냈다. 작년 여름 바닷가. 넷. 뒷면에 엄마 글씨." },
       { s: "sib", t: "야. 이 사진 다시 찍자. 똑같은 데서. 똑같이." },
       { s: "me", t: "그래. 똑같이." },
       { t: "가람 쪽 하늘이 밝아 왔다. 주민센터 깃발은 보이지 않았지만, 올라가 있을 거라고 생각했다." },
@@ -11557,7 +11560,7 @@ Object.assign(SCENES, {
 Object.assign(SCENES, {
   end_escape_both_v00: {
     variant: { of: "end_escape_both", if: "flag('school_jungwoo_join')", priority: 10 },
-    ending: { title: "셋이서 넘은 담", grade: "S", art: "img/end/A-10.webp" },
+    ending: { title: "셋이서 넘은 담", grade: "S", art: "img/end/S-08.webp" },
     bg: "street",
     lines: [
       { t: "검문소 너머 첫 번째 마을에서, 우리는 셋이었다." },
