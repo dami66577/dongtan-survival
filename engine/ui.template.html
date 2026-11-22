@@ -183,10 +183,17 @@ nav.tabs { display: grid; grid-template-columns: repeat(6, 1fr); height: var(--n
 .seg { display: flex; border: 1px solid var(--line-2); border-radius: 10px; overflow: hidden; }
 .seg button { padding: 7px 11px; font-size: 13px; color: var(--dim); }
 .seg button.on { background: var(--accent); color: var(--accent-ink); }
-.gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 6px; }
+.gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 6px; }
 .gallery .g { font-size: 12px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 12px; display: grid; gap: 2px; background: var(--surface-2); }
 .gallery .g b { font-family: var(--display); color: var(--accent); }
 .gallery .g.locked, .gallery .g.locked b { color: var(--faint); }
+.gallery .g { cursor: pointer; text-align: left; font: inherit; color: inherit; }
+.gallery .g img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 8px; display: block; margin-bottom: 4px; }
+.gallery .g .ph { width: 100%; aspect-ratio: 4 / 5; border-radius: 8px; margin-bottom: 4px; display: grid; place-items: center; background: var(--surface); border: 1px dashed var(--line-2); font-size: 22px; }
+.gallery .g.locked { cursor: default; }
+.gal-sec { grid-column: 1 / -1; font-size: 12px; color: var(--faint); margin-top: 6px; }
+#ov-photo img { width: min(100%, 320px); aspect-ratio: 4 / 5; object-fit: cover; border-radius: 14px; justify-self: center; }
+#ov-photo .cps { display: grid; gap: 6px; }
 
 /* ---- 엔딩 ---- */
 #ending { overflow-y: auto; align-items: center; text-align: center; padding-block: 28px 32px; scrollbar-width: none; }
@@ -223,7 +230,7 @@ nav.tabs { display: grid; grid-template-columns: repeat(6, 1fr); height: var(--n
     </div>
     <button class="btn primary" id="b-new">새로 시작</button>
     <button class="btn" id="b-continue" disabled>이어하기</button>
-    <div class="row2"><button class="btn" id="b-load">저장 슬롯</button><button class="btn" id="b-gallery">엔딩 기록</button></div>
+    <div class="row2"><button class="btn" id="b-load">저장 슬롯</button><button class="btn" id="b-gallery">사진첩</button></div>
     <button class="btn" id="b-install" hidden>폰에 앱으로 설치</button>
     <div class="title-meta" id="ios-hint" hidden>아이폰: Safari 공유 버튼 → "홈 화면에 추가"하면 앱처럼 실행됩니다.</div>
     <div class="title-meta">씬 <b id="m-scenes">0</b> · 대사 <b id="m-lines">0</b>줄 · 선택지 <b id="m-choices">0</b> · 엔딩 <b id="m-endings">0</b>종</div>
@@ -267,7 +274,7 @@ nav.tabs { display: grid; grid-template-columns: repeat(6, 1fr); height: var(--n
   <h2 id="e-title"></h2>
   <div class="summary" id="e-summary"></div>
   <div class="ep" id="e-ep"></div>
-  <div class="menu"><button class="btn primary" id="e-title-btn">처음으로</button><button class="btn" id="e-gallery-btn">엔딩 기록 보기</button></div>
+  <div class="menu"><button class="btn primary" id="e-title-btn">처음으로</button><button class="btn" id="e-gallery-btn">사진첩 보기</button></div>
 </section>
 
 <div class="toast" id="toast" role="status"><div class="ic">!</div><div><div class="h"><span>긴급재난문자</span><span id="toast-time"></span></div><div class="b" id="toast-body"></div></div></div>
@@ -286,7 +293,8 @@ nav.tabs { display: grid; grid-template-columns: repeat(6, 1fr); height: var(--n
   <div class="setrow"><span>효과음</span><div class="seg" data-key="sfx"><button data-v="0">끔</button><button data-v="1">켬</button></div></div>
   <div class="setrow"><span>진동</span><div class="seg" data-key="vib"><button data-v="0">끔</button><button data-v="1">켬</button></div></div>
 </div></div>
-<div class="overlay" id="ov-gal"><div class="sheet"><h2>엔딩 기록 <button class="x" data-close>닫기</button></h2><div class="muted" id="gal-count"></div><div class="gallery" id="gallery"></div></div></div>
+<div class="overlay" id="ov-gal"><div class="sheet"><h2>사진첩 <button class="x" data-close>닫기</button></h2><div class="muted" id="gal-count"></div><div class="gallery" id="gallery"></div></div></div>
+<div class="overlay" id="ov-photo"><div class="sheet"><h2><span id="ph-title"></span> <button class="x" data-close>닫기</button></h2><img id="ph-art" alt=""><div class="muted" id="ph-meta"></div><div class="muted">이 엔딩으로 가는 갈림길부터 다시 할 수 있어요.</div><div class="cps" id="ph-cps"></div></div></div>
 <div class="overlay" id="ov-confirm"><div class="sheet"><h2 id="c-title">확인</h2><div class="muted" id="c-msg"></div><button class="btn primary" id="c-ok">확인</button><button class="btn" data-close>취소</button></div></div>
 </div>
 
@@ -424,9 +432,37 @@ nav.tabs { display: grid; grid-template-columns: repeat(6, 1fr); height: var(--n
     const tag = document.createElement("div"); tag.className = "scene-tag"; tag.textContent = (BG_LABEL[v.bg] || "· · ·"); col.appendChild(tag);
     $("#choicebox").innerHTML = "";
     if (!v.ending) saveJSON("garam_auto", { S: Core.S, when: Date.now() });
+    if (v.id === "home_morning" || v.id === "end_start") recordCp(v.id);
     if (v.ending) { v.lines.forEach((l) => log.push(l)); showEnding(v); return; }
     if ((v.id === "home_morning" || v.id === "p_start") && S.flags._alert_day !== S.day) { S.flags._alert_day = S.day; setTimeout(() => toast(S.day), 900); }
     if (!lines.length) finishLines(); else queueLine();
+  }
+  /* --- 사진첩: 갈림길(매일 아침 · 출발 직전) 저장 --- */
+  function recordCp(id) {
+    const S = Core.S, label = id === "end_start" ? "출발 직전" : `D+${S.day} 아침`;
+    const cps = (loadJSON("garam_cps") || []).filter((c) => c.label !== label);
+    cps.push({ label, S: JSON.parse(JSON.stringify(S)) });
+    saveJSON("garam_cps", cps.slice(-9));
+  }
+  function endingArt(id) {
+    const e = SCENES[id].ending; if (e.art) return e.art;
+    const art = (window.ART && window.ART.end && window.ART.end[e.grade]) || []; if (!art.length) return "";
+    let h = 0; for (const ch of id) h = (h * 31 + ch.charCodeAt(0)) >>> 0; return art[h % art.length];
+  }
+  function replayFrom(cp) {
+    const go = () => { closeOv(); const S = JSON.parse(JSON.stringify(cp.S)); saveJSON("garam_cps", []); log = []; curBg = null; show("game"); render(Core.load(S)); };
+    if (loadJSON("garam_auto")) confirmBox("갈림길부터 다시", "진행 중인 자동 저장이 이 시점으로 바뀝니다. 계속할까요?", go); else go();
+  }
+  function openPhoto(id) {
+    const e = SCENES[id].ending, rec = (loadJSON("garam_album") || {})[id], got = (loadJSON("garam_endings") || {})[id];
+    $("#ph-title").textContent = e.title;
+    const src = endingArt(id), img = $("#ph-art"); img.hidden = !src; if (src) img.src = src;
+    $("#ph-meta").textContent = `${e.grade}등급` + (got && got.when ? ` · ${new Date(got.when).toLocaleDateString("ko-KR")}에 봄` : "");
+    const box = $("#ph-cps"); box.innerHTML = "";
+    const cps = (rec && rec.cps) || [];
+    if (!cps.length) { const m = document.createElement("div"); m.className = "muted"; m.textContent = "이 엔딩은 갈림길 기록이 없어요. 한 번 더 보면 생겨요."; box.appendChild(m); }
+    cps.slice().reverse().forEach((cp) => { const b = document.createElement("button"); b.className = "btn"; b.textContent = cp.label + "부터 다시"; b.onclick = () => replayFrom(cp); box.appendChild(b); });
+    openOv("ov-photo");
   }
   const DELAY = [0, 1, 2.2];
   function queueLine() {
@@ -487,6 +523,7 @@ nav.tabs { display: grid; grid-template-columns: repeat(6, 1fr); height: var(--n
   function showEnding(v) {
     const S = Core.S, e = v.ending;
     const got = loadJSON("garam_endings") || {}; got[v.id] = { title: e.title, grade: e.grade, when: Date.now() }; saveJSON("garam_endings", got);
+    const album = loadJSON("garam_album") || {}; album[v.id] = { cps: (loadJSON("garam_cps") || []).slice(-3) }; saveJSON("garam_album", album);
     try { localStorage.removeItem("garam_auto"); } catch (err) {}
     const g = $("#e-grade"); g.textContent = e.grade; g.className = "grade " + e.grade;
     const art = (window.ART && window.ART.end && window.ART.end[e.grade]) || [];
@@ -505,7 +542,7 @@ nav.tabs { display: grid; grid-template-columns: repeat(6, 1fr); height: var(--n
   /* --- 시작/저장 --- */
   $("#tap-start").addEventListener("click", () => { $("#title").classList.add("menu"); buzz(8); });
   $("#title").addEventListener("click", (e) => { if (!$("#title").classList.contains("menu") && !e.target.closest(".card")) $("#title").classList.add("menu"); });
-  function start(me, sib) { log = []; curBg = null; show("game"); render(Core.newGame(me, sib)); }
+  function start(me, sib) { saveJSON("garam_cps", []); log = []; curBg = null; show("game"); render(Core.newGame(me, sib)); }
   $("#b-new").addEventListener("click", () => {
     const me = $("#in-me").value.trim() || "나", sib = $("#in-sib").value.trim() || "동생";
     if (loadJSON("garam_auto")) confirmBox("새로 시작", "자동 저장된 진행이 지워집니다. 새로 시작할까요?", () => start(me, sib)); else start(me, sib);
@@ -518,7 +555,7 @@ nav.tabs { display: grid; grid-template-columns: repeat(6, 1fr); height: var(--n
       const d = loadJSON("garam_slot" + i); const row = document.createElement("div"); row.className = "slot";
       row.innerHTML = `<span>슬롯 ${i}<br><span class="muted">${d ? `D+${d.S.day} · ${esc(d.S.me)} & ${esc(d.S.sibName)} · ${new Date(d.when).toLocaleString("ko-KR")}` : "비어 있음"}</span></span>`;
       const s = document.createElement("button"); s.className = "x"; s.textContent = "저장"; s.disabled = !inGame; s.onclick = () => { if (saveJSON("garam_slot" + i, { S: Core.S, when: Date.now() })) { buzz(8); renderSlots(inGame); } };
-      const l = document.createElement("button"); l.className = "x"; l.textContent = "불러오기"; l.disabled = !d; l.onclick = () => { closeOv(); log = []; curBg = null; show("game"); render(Core.load(d.S)); };
+      const l = document.createElement("button"); l.className = "x"; l.textContent = "불러오기"; l.disabled = !d; l.onclick = () => { closeOv(); saveJSON("garam_cps", []); log = []; curBg = null; show("game"); render(Core.load(d.S)); };
       row.appendChild(s); row.appendChild(l); box.appendChild(row);
     }
   }
@@ -533,10 +570,21 @@ nav.tabs { display: grid; grid-template-columns: repeat(6, 1fr); height: var(--n
   });
   $("#t-log").addEventListener("click", () => { const b = $("#logbox"); b.innerHTML = ""; log.slice(-150).forEach((l) => { const d = document.createElement("div"); d.className = "l" + (l.role === "c" ? " c" : ""); d.innerHTML = l.role === "c" ? "▶ " + esc(l.t) : l.role === "n" ? esc(l.t) : `<b>${esc(l.s)}</b> ${esc(l.t)}`; b.appendChild(d); }); openOv("ov-log"); const sh = $("#ov-log .sheet"); sh.scrollTop = sh.scrollHeight; });
   $("#t-set").addEventListener("click", () => openOv("ov-set"));
+  const GRADE_ORDER = ["S", "A", "B", "C", "D", "F", "히든"];
   function openGallery() {
     const got = loadJSON("garam_endings") || {}; const g = $("#gallery"); g.innerHTML = "";
-    $("#gal-count").textContent = `수집 ${Object.keys(got).filter((k) => SCENES[k]).length} / ${ENDING_IDS.length}`;
-    ENDING_IDS.forEach((id) => { const e = SCENES[id].ending; const d = document.createElement("div"); const has = !!got[id]; d.className = "g" + (has ? "" : " locked"); d.innerHTML = `<b>${has ? esc(e.grade) : "?"}</b><span>${has ? esc(e.title) : (e.hint ? esc(e.hint) : "아직 보지 못한 엔딩")}</span>`; g.appendChild(d); });
+    $("#gal-count").textContent = `모은 사진 ${Object.keys(got).filter((k) => SCENES[k] && SCENES[k].ending).length} / ${ENDING_IDS.length}`;
+    GRADE_ORDER.forEach((gr) => {
+      const ids = ENDING_IDS.filter((id) => SCENES[id].ending.grade === gr); if (!ids.length) return;
+      const sec = document.createElement("div"); sec.className = "gal-sec"; sec.textContent = `${gr}등급 · ${ids.filter((id) => got[id]).length}/${ids.length}`; g.appendChild(sec);
+      ids.forEach((id) => {
+        const e = SCENES[id].ending, has = !!got[id], d = document.createElement("button"); d.className = "g" + (has ? "" : " locked");
+        const src = has ? endingArt(id) : "";
+        d.innerHTML = (src ? `<img src="${esc(src)}" alt="" loading="lazy">` : `<div class="ph">?</div>`) + `<b>${has ? esc(e.grade) : "?"}</b><span>${has ? esc(e.title) : (e.hint ? esc(e.hint) : "아직 보지 못한 엔딩")}</span>`;
+        if (has) d.onclick = () => openPhoto(id); else d.disabled = true;
+        g.appendChild(d);
+      });
+    });
     openOv("ov-gal");
   }
   $("#b-gallery").addEventListener("click", openGallery);

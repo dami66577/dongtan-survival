@@ -183,10 +183,17 @@ nav.tabs { display: grid; grid-template-columns: repeat(6, 1fr); height: var(--n
 .seg { display: flex; border: 1px solid var(--line-2); border-radius: 10px; overflow: hidden; }
 .seg button { padding: 7px 11px; font-size: 13px; color: var(--dim); }
 .seg button.on { background: var(--accent); color: var(--accent-ink); }
-.gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 6px; }
+.gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 6px; }
 .gallery .g { font-size: 12px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 12px; display: grid; gap: 2px; background: var(--surface-2); }
 .gallery .g b { font-family: var(--display); color: var(--accent); }
 .gallery .g.locked, .gallery .g.locked b { color: var(--faint); }
+.gallery .g { cursor: pointer; text-align: left; font: inherit; color: inherit; }
+.gallery .g img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 8px; display: block; margin-bottom: 4px; }
+.gallery .g .ph { width: 100%; aspect-ratio: 4 / 5; border-radius: 8px; margin-bottom: 4px; display: grid; place-items: center; background: var(--surface); border: 1px dashed var(--line-2); font-size: 22px; }
+.gallery .g.locked { cursor: default; }
+.gal-sec { grid-column: 1 / -1; font-size: 12px; color: var(--faint); margin-top: 6px; }
+#ov-photo img { width: min(100%, 320px); aspect-ratio: 4 / 5; object-fit: cover; border-radius: 14px; justify-self: center; }
+#ov-photo .cps { display: grid; gap: 6px; }
 
 /* ---- 엔딩 ---- */
 #ending { overflow-y: auto; align-items: center; text-align: center; padding-block: 28px 32px; scrollbar-width: none; }
@@ -223,7 +230,7 @@ nav.tabs { display: grid; grid-template-columns: repeat(6, 1fr); height: var(--n
     </div>
     <button class="btn primary" id="b-new">새로 시작</button>
     <button class="btn" id="b-continue" disabled>이어하기</button>
-    <div class="row2"><button class="btn" id="b-load">저장 슬롯</button><button class="btn" id="b-gallery">엔딩 기록</button></div>
+    <div class="row2"><button class="btn" id="b-load">저장 슬롯</button><button class="btn" id="b-gallery">사진첩</button></div>
     <button class="btn" id="b-install" hidden>폰에 앱으로 설치</button>
     <div class="title-meta" id="ios-hint" hidden>아이폰: Safari 공유 버튼 → "홈 화면에 추가"하면 앱처럼 실행됩니다.</div>
     <div class="title-meta">씬 <b id="m-scenes">0</b> · 대사 <b id="m-lines">0</b>줄 · 선택지 <b id="m-choices">0</b> · 엔딩 <b id="m-endings">0</b>종</div>
@@ -267,7 +274,7 @@ nav.tabs { display: grid; grid-template-columns: repeat(6, 1fr); height: var(--n
   <h2 id="e-title"></h2>
   <div class="summary" id="e-summary"></div>
   <div class="ep" id="e-ep"></div>
-  <div class="menu"><button class="btn primary" id="e-title-btn">처음으로</button><button class="btn" id="e-gallery-btn">엔딩 기록 보기</button></div>
+  <div class="menu"><button class="btn primary" id="e-title-btn">처음으로</button><button class="btn" id="e-gallery-btn">사진첩 보기</button></div>
 </section>
 
 <div class="toast" id="toast" role="status"><div class="ic">!</div><div><div class="h"><span>긴급재난문자</span><span id="toast-time"></span></div><div class="b" id="toast-body"></div></div></div>
@@ -286,7 +293,8 @@ nav.tabs { display: grid; grid-template-columns: repeat(6, 1fr); height: var(--n
   <div class="setrow"><span>효과음</span><div class="seg" data-key="sfx"><button data-v="0">끔</button><button data-v="1">켬</button></div></div>
   <div class="setrow"><span>진동</span><div class="seg" data-key="vib"><button data-v="0">끔</button><button data-v="1">켬</button></div></div>
 </div></div>
-<div class="overlay" id="ov-gal"><div class="sheet"><h2>엔딩 기록 <button class="x" data-close>닫기</button></h2><div class="muted" id="gal-count"></div><div class="gallery" id="gallery"></div></div></div>
+<div class="overlay" id="ov-gal"><div class="sheet"><h2>사진첩 <button class="x" data-close>닫기</button></h2><div class="muted" id="gal-count"></div><div class="gallery" id="gallery"></div></div></div>
+<div class="overlay" id="ov-photo"><div class="sheet"><h2><span id="ph-title"></span> <button class="x" data-close>닫기</button></h2><img id="ph-art" alt=""><div class="muted" id="ph-meta"></div><div class="muted">이 엔딩으로 가는 갈림길부터 다시 할 수 있어요.</div><div class="cps" id="ph-cps"></div></div></div>
 <div class="overlay" id="ov-confirm"><div class="sheet"><h2 id="c-title">확인</h2><div class="muted" id="c-msg"></div><button class="btn primary" id="c-ok">확인</button><button class="btn" data-close>취소</button></div></div>
 </div>
 
@@ -11571,6 +11579,268 @@ Object.assign(SCENES, {
       { t: "우리는 해원행 트럭 짐칸에 나란히 앉았다. 아무도 뒤를 돌아보지 않았다." },
     ],
   },
+
+  // ───────── 2차 변형 엔딩 (15종) ─────────
+  end_stay_mall_v01: {
+    variant: { of: "end_stay_mall", if: "flag('hosp_nurse_ally')", priority: 20 },
+    ending: { title: "상가 진료소", grade: "A", art: "img/end/S-06.webp" },
+    bg: "mall",
+    lines: [
+      { t: "나란히 상가 1층 약국. 셔터를 반만 올리고 『진료 중』이라고 매직으로 썼다. 서 간호사 글씨였다." },
+      { t: "병원에서 넘어온 건 서 간호사와 약 상자 두 개, 체온계 하나였다. 박 사장은 그걸 보고 한참 말이 없었다." },
+      { s: "박 사장", t: "어이, 간호사 선생. 우리 같은 데 와도 되는 거요?" },
+      { s: "서은혜 간호사", t: "병원엔 이제 환자가 없어요. 여긴 있고요." },
+      { t: "동생은 접수 담당이 됐다. 이름을 받아 적고, 체온을 불러 주고, 아픈 척하는 민재를 쫓아냈다." },
+      { s: "sib", t: "또 왔어요. 이번엔 마음이 아프대요." },
+      { s: "서은혜 간호사", t: "그건 약이 없어요. 돌려보내세요." },
+      { t: "밤이면 약국 불빛이 상가에서 제일 늦게 꺼졌다. 그 불빛을 보고 길 건너에서 사람이 하나씩 왔다." },
+      { t: "— 가람에 남았다. 아픈 사람이 찾아올 수 있는 곳으로." },
+    ],
+  },
+
+  end_stay_mall_v02: {
+    variant: { of: "end_stay_mall", if: "flag('extra_minjae_team')", priority: 10 },
+    ending: { title: "옥상 물탱크", grade: "B", art: "img/end/B-02.webp" },
+    bg: "mall",
+    lines: [
+      { t: "나란히 상가 옥상. 파란 물통 세 개. 빗물받이 홈통은 민재가 이어 붙였고, 동생이 거기 테이프를 감았다." },
+      { t: "박 사장은 옥상을 『수도국』이라고 불렀다. 이번에도 아무도 그렇게 안 불렀다." },
+      { s: "민재", t: "이거 내가 다 만든 거다. 적어 놔." },
+      { s: "sib", t: "테이프는 내가 감았는데." },
+      { s: "민재", t: "테이프는 기술이 아니야." },
+      { s: "sib", t: "그럼 새는 것도 기술 아니네." },
+      { t: "물통에서 물이 샜다. 둘이 동시에 테이프를 들고 뛰어갔다." },
+      { s: "유나", t: "오늘 받은 빗물 40리터. 장부에 적습니다. 샌 거 빼고." },
+      { t: "3주 동안 동생은 나 말고는 말할 사람이 없었다. 이제 싸울 사람이 생겼다. 그게 더 좋아 보였다." },
+      { t: "— 가람에 남았다. 옥상에 물이 차는 만큼." },
+    ],
+  },
+
+  end_stay_mall_v03: {
+    variant: { of: "end_stay_mall", if: "flag('mall_coward')", priority: 30 },
+    ending: { title: "갚을 것", grade: "C", art: "img/end/C-05.webp" },
+    bg: "mall",
+    lines: [
+      { t: "나란히 상가 2층 치킨집. 습격이 있던 날, 우리는 돌아섰다. 뒤에서 들리는 소리를 들으면서." },
+      { t: "다시 왔을 때 박 사장은 아무것도 묻지 않았다. 그게 더 무거웠다." },
+      { s: "박 사장", t: "어이, 학생. 밥 먹어. 식어." },
+      { t: "유나는 장부에 우리 이름을 적었다. 그날 날짜 옆에는 아무것도 적지 않았다. 빈칸이 오히려 컸다." },
+      { s: "sib", t: "야. 우리 그때 갔으면, 뭐가 달라졌을까." },
+      { s: "me", t: "모르겠어." },
+      { s: "sib", t: "나도. 근데 계속 생각나." },
+      { t: "밤마다 정찰조에 자원했다. 아무도 말리지 않았다. 박 사장만 한 번, 내 어깨를 두 번 두드렸다." },
+      { t: "갚는다고 갚아지는 건 아니었다. 그래도 매일 나갔다. 다른 방법을 몰랐으니까." },
+      { t: "— 가람에 남았다. 갚을 게 있어서." },
+    ],
+  },
+
+  end_escape_both_v01: {
+    variant: { of: "end_escape_both", if: "flag('center_choi_gone')", priority: 5 },
+    ending: { title: "명단의 마지막 줄", grade: "S", art: "img/end/S-01.webp" },
+    bg: "street",
+    lines: [
+      { t: "해원 집결지. 입구 옆 접이식 책상. 클립보드. 거기 앉아 있는 사람을 보고 동생이 먼저 멈췄다." },
+      { s: "최 주무관", t: "…이름." },
+      { s: "sib", t: "아줌마! 저요! 우리요!" },
+      { s: "최 주무관", t: "아줌마 아니고 주무관. 이름 대세요. 규칙이에요." },
+      { t: "이름을 댔다. 최 주무관은 가람 칸을 펼쳐 우리 이름 옆의 체크를 지우고, 새로 썼다. 『도착』." },
+      { t: "손이 조금 떨렸다. 원칙주의자의 글씨치고는 삐뚤었다." },
+      { s: "최 주무관", t: "주민센터 깃발은 내리고 왔어요. 아무도 안 올 줄 알았거든." },
+      { s: "me", t: "봤어요. 내려간 거." },
+      { s: "최 주무관", t: "…그래도 왔네요." },
+      { t: "다음 날 아침, 집결지 게양대에 깃발이 하나 더 올라갔다. 주민센터 것이었다. 가방에 넣어 온 모양이었다." },
+      { t: "— 둘이서, 가람을 나왔다. 명단의 마지막 줄까지." },
+    ],
+  },
+
+  end_escape_cold_v01: {
+    variant: { of: "end_escape_cold", if: "flag('center_letter_hidden')", priority: 10 },
+    ending: { title: "반 칸", grade: "A", art: "img/end/A-01.webp" },
+    bg: "night",
+    lines: [
+      { t: "해원 집결지. 매트 두 장, 한 칸 건너. 동생은 내 쪽을 보지 않고 잤다." },
+      { t: "엄마 편지는 아직 내 안주머니에 있었다. 주민센터에서 '집에 가서'라고 했던 그 편지. 집에 가서도 꺼내지 않았다." },
+      { t: "보여 주면 끝날 줄 알았다. 그런데 꺼낼 때마다 '왜 이제야'가 먼저 들릴 것 같았다." },
+      { t: "닷새째 밤. 동생 베개 밑에 편지를 밀어 넣었다. 아무 말 없이." },
+      { t: "아침에 편지는 없었다. 대신 내 신발 안에 종이가 한 장 들어 있었다." },
+      { t: "『다음엔 바로 보여 줘. 나 열네 살이지 바보 아님.』" },
+      { s: "me", t: "…글씨 엄마 닮았네." },
+      { s: "sib", t: "(한 칸 건너에서) 다 들리거든." },
+      { t: "그날 밤 동생은 매트를 옮겼다. 반 칸만." },
+      { t: "— 둘 다 살았다. 사이의 한 칸이, 반 칸이 됐다." },
+    ],
+  },
+
+  end_escape_alone_v01: {
+    variant: { of: "end_escape_alone", if: "flag('school_teacher_ally') && has('라디오')", priority: 20 },
+    ending: { title: "응답 바람", grade: "A", art: "img/end/A-04.webp" },
+    bg: "night",
+    lines: [
+      { t: "해원 집결지 통신 텐트. 매일 저녁 무전 일지를 정리하는 일을 맡았다. 가람 쪽 주파수는 늘 잡음이었다." },
+      { t: "열흘째. 잡음 사이로 익숙한 말투가 끼어들었다." },
+      { s: "라디오", t: "가람 우리 학교입니다. 급식은 없지만 사람은 있습니다. 응답 바람." },
+      { t: "펜을 떨어뜨렸다. 그 문장. 동생이 쓸 법한 문장이었다. 아니, 동생 목소리였다." },
+      { s: "김동현 선생", t: "(잡음 너머) 학생, 천천히 읽어. 숨 쉬고." },
+      { s: "me", t: "여기 해원. 해원입니다. …야. 나야." },
+      { t: "한참 잡음만 났다. 그리고." },
+      { s: "sib", t: "…늦었잖아. 바보야." },
+      { t: "통신병은 내 손에서 송신기를 가져가지 않았다. 그날은 일지를 쓰지 않았다." },
+      { t: "— 가람을 혼자 나왔다. 목소리는 둘이었다." },
+    ],
+  },
+
+  end_escape_alone_v02: {
+    variant: { of: "end_escape_alone", if: "flag('extra_one_pact')", priority: 10 },
+    ending: { title: "계단참", grade: "B", art: "img/end/C-06.webp" },
+    bg: "night",
+    lines: [
+      { t: "해원 집결지. 한 명분의 매트. 2주 동안 명단의 빈칸을 보고만 있었다." },
+      { t: "셋째 주. 가람 재진입 수색조가 꾸려졌다. 맨 앞에 이름을 적었다. 이번에는 손이 멈추지 않았다." },
+      { t: "12층은 걸어서 올라갔다. 집 앞 계단참. 떨어지면 여기서 만나자고 적었던 곳." },
+      { t: "벽에 분필 자국이 있었다. 삐뚤빼뚤한 바를 정(正) 자. 하루에 한 획씩. 세 개를 채우고 한 획이 더 있었다." },
+      { t: "그 아래 한 줄. 『계속 여기 있음. 약속했으니까. 늦으면 삐짐.』" },
+      { t: "문을 두드렸다. 두 번, 쉬고, 한 번. 우리끼리만 아는 노크였다." },
+      { t: "안에서 체인 푸는 소리가 났다. 아주 천천히. 손에 힘이 없는 사람처럼." },
+      { s: "sib", t: "…삐졌어. 엄청." },
+      { t: "— 가람으로 돌아왔다. 약속한 자리로." },
+    ],
+  },
+
+  end_escape_alone_v03: {
+    variant: { of: "end_escape_alone", if: "flag('home_lied')", priority: 1 },
+    ending: { title: "거짓말이 사실이 된 날", grade: "F", art: "img/end/F-10.webp" },
+    bg: "night",
+    lines: [
+      { t: "해원 집결지. 명단 앞에 섰다. 부모님 이름이 있었다. 둘 다. 『생존. 해원 집결지 3동.』" },
+      { t: "3주 전 식탁. 동생이 참치캔을 굴리며 물었다. 엄마 아빠 언제 와. 곧 올 거라고 했다. 아무것도 모르면서." },
+      { t: "거짓말이 사실이 됐다. 그걸 들려줄 사람만 없었다." },
+      { t: "엄마가 체육관 입구에서 나를 보고 뛰어왔다. 그리고 내 뒤를 봤다. 한 번. 두 번. 세 번." },
+      { t: "엄마는 묻지 않았다. 묻지 않아도 되는 얼굴을 내가 하고 있었다." },
+      { t: "아빠가 동생 이름을 불렀다. 체육관 끝까지. 아무도 대답하지 않았다. 대답할 사람을 내가 두고 왔으니까." },
+      { t: "그날 밤 엄마가 내 등을 쓸었다. 어릴 때처럼. 그게 제일 견딜 수 없었다." },
+      { t: "— 가람을 나왔다. 동생한테 한 거짓말만 데리고." },
+    ],
+  },
+
+  end_stay_school_v01: {
+    variant: { of: "end_stay_school", if: "flag('extra_live_note')", priority: 10 },
+    ending: { title: "노란 우산", grade: "A", art: "img/end/A-02.webp" },
+    bg: "school",
+    lines: [
+      { t: "동생 학교 과학실. 무전 일지 맨 앞 장에 노란 우산 그림이 붙어 있었다. 내가 그린 거. 여전히 우산 같지 않았다." },
+      { t: "그 목소리를 찾는 데 2주가 걸렸다. 김 선생이 주파수를 좁혀 줬고, 동생이 매일 밤 같은 말을 보냈다." },
+      { s: "sib", t: "노란 우산 든 사람한테 말 걸어 준 분. 응답 바람." },
+      { t: "열엿새째. 응답이 왔다. 길 건너 단지 옥상. 쌍안경 하나로 가람 거리를 내려다보며 혼자 방송하던 사람이었다." },
+      { s: "라디오", t: "…그 우산 쓴 사람, 무사히 갔어요. 내가 끝까지 봤어요." },
+      { s: "sib", t: "그럼 그쪽은요? 그쪽은 누가 봐 줘요?" },
+      { t: "한참 잡음. 그리고 웃음소리 같은 것." },
+      { t: "그날부터 과학실 창가에 쌍안경이 생겼다. 서로 얼굴은 안 보였다. 그래도 매일 저녁 여섯 시, 서로의 옥상을 봐 줬다." },
+      { t: "— 가람에 남아, 서로의 창문이 됐다." },
+    ],
+  },
+
+  end_day9_v01: {
+    variant: { of: "end_day9", if: "flag('sys_garam_fm')", priority: 5 },
+    ending: { title: "가람 FM", grade: "B", art: "img/end/B-03.webp" },
+    bg: "home",
+    lines: [
+      { t: "9일째 아침. 해원 방송이 끊겼다. 다이얼을 돌렸다. 한 군데만 살아 있었다." },
+      { s: "라디오", t: "아아, 들리나요. 여기는 가람 FM. 오늘도 어른 방송은 안 나와요. 그러니까 우리가 해요." },
+      { s: "sib", t: "…학원 건물 옥상이랬지." },
+      { t: "그날 오후 학원 건물 옥상에 올라갔다. 송신기 앞에 우리보다 어린 애가 앉아 있었다. 마이크 대신 손전등을 쥐고." },
+      { s: "sib", t: "야. 너 노래 못 부르지." },
+      { t: "애가 고개를 끄덕였다. 동생이 마이크를 받았다." },
+      { s: "sib", t: "여기는 가람 FM. 오늘의 소식. 12층에 사람 있습니다. 라면 있습니다. 노래는 없습니다." },
+      { t: "그날부터 방송은 셋이 했다. 소식은 내가 모으고, 원고는 동생이 쓰고, 애는 끝인사만 했다. 그게 제일 잘했다." },
+      { t: "— 가람에 남았다. 꺼진 라디오 대신 켜진 라디오로." },
+    ],
+  },
+
+  end_day9_v02: {
+    variant: { of: "end_day9", if: "flag('sys_heli_signal')", priority: 10 },
+    ending: { title: "12층의 등불", grade: "히든", art: "img/end/hidden-01.webp" },
+    bg: "night",
+    lines: [
+      { t: "9일째. 라디오가 꺼졌다. 그날 밤, 동생이 손전등을 들고 옥상으로 올라갔다." },
+      { s: "sib", t: "헬기도 봤잖아. 누가 보고 있을 거야." },
+      { t: "켰다 껐다. 세 번 짧게, 세 번 길게. 어디서 배운 건지 모를 신호를 동생은 매일 밤 보냈다." },
+      { t: "엿새째 밤. 맞은편 단지 15층에서 불빛이 깜빡였다. 세 번 짧게." },
+      { t: "이틀 뒤엔 호수공원 쪽에서. 그다음엔 학교 쪽에서. 가람이 생각보다 덜 비어 있었다." },
+      { t: "열흘째 아침. 현관문 두드리는 소리. 문구멍 너머에 모르는 얼굴이 넷. 손에 손전등." },
+      { s: "모르는 사람", t: "…12층이죠? 불빛 보고 왔어요." },
+      { s: "sib", t: "(체인을 풀며) 들어오세요. 라면은 반 개씩이에요." },
+      { t: "— 가람에 남았다. 불을 켜 두는 쪽으로." },
+    ],
+  },
+
+  end_bus_trap_v01: {
+    variant: { of: "end_bus_trap", if: "!flag('info_fake')", priority: 10 },
+    ending: { title: "끝까지 믿은 사람", grade: "D", art: "img/end/C-08.webp" },
+    bg: "night",
+    lines: [
+      { t: "새벽 다섯 시. 가람역 북광장. 버스 정류장 의자에 둘이 나란히 앉았다." },
+      { t: "우리는 몰랐다. 방송이 녹음이라는 걸. 그래서 기다렸다. 진심으로." },
+      { s: "sib", t: "몇 시야." },
+      { s: "me", t: "다섯 시 십 분." },
+      { s: "sib", t: "늦나 보다. 눈 오니까." },
+      { t: "다섯 시 반. 스피커는 계속 같은 말을 했다. 『매주 토요일 새벽 5시』. 소리는 광장을 넘어 멀리까지 갔다. 듣는 게 우리만은 아니었다." },
+      { t: "발소리가 사방에서 났다. 사람 걸음이 아니었다. 다리가 굳어서 일어나지지 않았다." },
+      { t: "동생이 내 손을 잡았다. 마지막까지 버스가 올 쪽을 보고 있었다." },
+      { s: "sib", t: "…오면 깨워 줘." },
+      { t: "— 버스는 오지 않았다. 우리는 끝까지 믿었다." },
+    ],
+  },
+
+  end_sib_turn_v01: {
+    variant: { of: "end_sib_turn", if: "flag('sys_birthday_seen')", priority: 10 },
+    ending: { title: "열다섯", grade: "F", art: "img/end/F-02.webp" },
+    bg: "night",
+    lines: [
+      { t: "손끝부터였다. 동생은 그걸 매일 아침 보여 줬다. 『여기까지 왔어』라고. 키 재는 것처럼." },
+      { s: "sib", t: "야. 나 열다섯 된 거 맞지? 생일 지났으니까." },
+      { s: "me", t: "맞아." },
+      { s: "sib", t: "그럼 내년에 중3이네. 교복 새로 사야 되는데." },
+      { t: "대답하지 못했다. 열다섯 살 교복 치수를 생각하다가, 그만뒀다." },
+      { t: "이틀째 밤. 동생이 혼자 생일 축하 노래를 불렀다. 첫 소절만. 가사를 자꾸 틀렸다." },
+      { t: "사흘째 밤. 동생이 내 이름을 불렀다. 그게 마지막으로 제대로 된 말이었다." },
+      { t: "그 뒤로는 소리였다. 생일 노래 음정을 아주 조금 닮은." },
+      { t: "문을 열었다. 동생이 부탁한 대로. 생일 초 대신 꽂았던 성냥이 아직 식탁에 있었다." },
+      { t: "— 열다섯 살이 됐다. 하루도 못 써 본 열다섯." },
+    ],
+  },
+
+  end_death_me_v01: {
+    variant: { of: "end_death_me", if: "flag('extra_one_pact')", priority: 10 },
+    ending: { title: "먼저 감", grade: "F", art: "img/end/D-01.webp" },
+    bg: "night",
+    lines: [
+      { t: "몸이 먼저 멈췄다. 동생이 내 가방을 멨다. 자기 책가방 위에 겹쳐서." },
+      { s: "sib", t: "…약속했잖아. 떨어지면 계단참이라고. 너 지금 떨어진 거야?" },
+      { t: "동생은 울지 않았다. 주머니에서 분필을 꺼냈다. 우리가 약속을 적을 때 쓴 거." },
+      { t: "계단참 벽에 동생이 썼다. 『{{me}}. 여기서 기다림.』 그 아래. 『{{sib}}. 먼저 감. 따라와.』" },
+      { t: "따라갈 수 없다는 걸 동생도 알았다. 알면서 썼다. 그게 우리 방식이었으니까." },
+      { t: "동생 발소리가 계단 아래로 멀어졌다. 한 층마다 한 번씩 멈췄다. 돌아볼까 말까 하는 것처럼." },
+      { t: "— 둘에서, 하나가 됐다. 벽에는 아직 둘이 남아 있다." },
+    ],
+  },
+
+  end_parents_v01: {
+    variant: { of: "end_parents", if: "flag('center_letter_shared')", priority: 10 },
+    ending: { title: "문 두드린 사람", grade: "히든", art: "img/end/hidden-02.webp" },
+    bg: "night",
+    lines: [
+      { t: "승합차에서 엄마가 내렸다. 동생이 먼저 뛰었다. 그리고 엄마 바로 앞에서 멈췄다." },
+      { s: "sib", t: "엄마. 문 두드린 거, 엄마였지. 우리 안 열어 줬어." },
+      { t: "엄마는 대답 대신 동생을 안았다. 한참." },
+      { s: "엄마", t: "열었으면 혼냈을 거야. 문 열지 말라고 했잖아." },
+      { s: "sib", t: "…그럼 우리 잘한 거야?" },
+      { s: "엄마", t: "제일 잘했어." },
+      { t: "아빠가 운전석에서 내렸다. 서울에서, 해원에서, 그리고 매일 밤 이 농로 끝까지 왔다 갔다 한 얼굴." },
+      { t: "정우는 승합차 문 앞에 서 있었다. 고양이를 안고. 아빠가 손짓했다. 『너도. 타.』", if: "S.flags.school_jungwoo_join" },
+      { t: "사진을 꺼냈다. 작년 여름 바닷가. 넷. 동생이 뒷면에 한 줄을 보탰다. 『문 안 열어 줘서 미안. 근데 잘한 거래.』" },
+      { t: "— 넷이서. 이번엔 문을 열고." },
+    ],
+  },
 });
 
 </script>
@@ -11702,9 +11972,37 @@ Object.assign(SCENES, {
     const tag = document.createElement("div"); tag.className = "scene-tag"; tag.textContent = (BG_LABEL[v.bg] || "· · ·"); col.appendChild(tag);
     $("#choicebox").innerHTML = "";
     if (!v.ending) saveJSON("garam_auto", { S: Core.S, when: Date.now() });
+    if (v.id === "home_morning" || v.id === "end_start") recordCp(v.id);
     if (v.ending) { v.lines.forEach((l) => log.push(l)); showEnding(v); return; }
     if ((v.id === "home_morning" || v.id === "p_start") && S.flags._alert_day !== S.day) { S.flags._alert_day = S.day; setTimeout(() => toast(S.day), 900); }
     if (!lines.length) finishLines(); else queueLine();
+  }
+  /* --- 사진첩: 갈림길(매일 아침 · 출발 직전) 저장 --- */
+  function recordCp(id) {
+    const S = Core.S, label = id === "end_start" ? "출발 직전" : `D+${S.day} 아침`;
+    const cps = (loadJSON("garam_cps") || []).filter((c) => c.label !== label);
+    cps.push({ label, S: JSON.parse(JSON.stringify(S)) });
+    saveJSON("garam_cps", cps.slice(-9));
+  }
+  function endingArt(id) {
+    const e = SCENES[id].ending; if (e.art) return e.art;
+    const art = (window.ART && window.ART.end && window.ART.end[e.grade]) || []; if (!art.length) return "";
+    let h = 0; for (const ch of id) h = (h * 31 + ch.charCodeAt(0)) >>> 0; return art[h % art.length];
+  }
+  function replayFrom(cp) {
+    const go = () => { closeOv(); const S = JSON.parse(JSON.stringify(cp.S)); saveJSON("garam_cps", []); log = []; curBg = null; show("game"); render(Core.load(S)); };
+    if (loadJSON("garam_auto")) confirmBox("갈림길부터 다시", "진행 중인 자동 저장이 이 시점으로 바뀝니다. 계속할까요?", go); else go();
+  }
+  function openPhoto(id) {
+    const e = SCENES[id].ending, rec = (loadJSON("garam_album") || {})[id], got = (loadJSON("garam_endings") || {})[id];
+    $("#ph-title").textContent = e.title;
+    const src = endingArt(id), img = $("#ph-art"); img.hidden = !src; if (src) img.src = src;
+    $("#ph-meta").textContent = `${e.grade}등급` + (got && got.when ? ` · ${new Date(got.when).toLocaleDateString("ko-KR")}에 봄` : "");
+    const box = $("#ph-cps"); box.innerHTML = "";
+    const cps = (rec && rec.cps) || [];
+    if (!cps.length) { const m = document.createElement("div"); m.className = "muted"; m.textContent = "이 엔딩은 갈림길 기록이 없어요. 한 번 더 보면 생겨요."; box.appendChild(m); }
+    cps.slice().reverse().forEach((cp) => { const b = document.createElement("button"); b.className = "btn"; b.textContent = cp.label + "부터 다시"; b.onclick = () => replayFrom(cp); box.appendChild(b); });
+    openOv("ov-photo");
   }
   const DELAY = [0, 1, 2.2];
   function queueLine() {
@@ -11765,6 +12063,7 @@ Object.assign(SCENES, {
   function showEnding(v) {
     const S = Core.S, e = v.ending;
     const got = loadJSON("garam_endings") || {}; got[v.id] = { title: e.title, grade: e.grade, when: Date.now() }; saveJSON("garam_endings", got);
+    const album = loadJSON("garam_album") || {}; album[v.id] = { cps: (loadJSON("garam_cps") || []).slice(-3) }; saveJSON("garam_album", album);
     try { localStorage.removeItem("garam_auto"); } catch (err) {}
     const g = $("#e-grade"); g.textContent = e.grade; g.className = "grade " + e.grade;
     const art = (window.ART && window.ART.end && window.ART.end[e.grade]) || [];
@@ -11783,7 +12082,7 @@ Object.assign(SCENES, {
   /* --- 시작/저장 --- */
   $("#tap-start").addEventListener("click", () => { $("#title").classList.add("menu"); buzz(8); });
   $("#title").addEventListener("click", (e) => { if (!$("#title").classList.contains("menu") && !e.target.closest(".card")) $("#title").classList.add("menu"); });
-  function start(me, sib) { log = []; curBg = null; show("game"); render(Core.newGame(me, sib)); }
+  function start(me, sib) { saveJSON("garam_cps", []); log = []; curBg = null; show("game"); render(Core.newGame(me, sib)); }
   $("#b-new").addEventListener("click", () => {
     const me = $("#in-me").value.trim() || "나", sib = $("#in-sib").value.trim() || "동생";
     if (loadJSON("garam_auto")) confirmBox("새로 시작", "자동 저장된 진행이 지워집니다. 새로 시작할까요?", () => start(me, sib)); else start(me, sib);
@@ -11796,7 +12095,7 @@ Object.assign(SCENES, {
       const d = loadJSON("garam_slot" + i); const row = document.createElement("div"); row.className = "slot";
       row.innerHTML = `<span>슬롯 ${i}<br><span class="muted">${d ? `D+${d.S.day} · ${esc(d.S.me)} & ${esc(d.S.sibName)} · ${new Date(d.when).toLocaleString("ko-KR")}` : "비어 있음"}</span></span>`;
       const s = document.createElement("button"); s.className = "x"; s.textContent = "저장"; s.disabled = !inGame; s.onclick = () => { if (saveJSON("garam_slot" + i, { S: Core.S, when: Date.now() })) { buzz(8); renderSlots(inGame); } };
-      const l = document.createElement("button"); l.className = "x"; l.textContent = "불러오기"; l.disabled = !d; l.onclick = () => { closeOv(); log = []; curBg = null; show("game"); render(Core.load(d.S)); };
+      const l = document.createElement("button"); l.className = "x"; l.textContent = "불러오기"; l.disabled = !d; l.onclick = () => { closeOv(); saveJSON("garam_cps", []); log = []; curBg = null; show("game"); render(Core.load(d.S)); };
       row.appendChild(s); row.appendChild(l); box.appendChild(row);
     }
   }
@@ -11811,10 +12110,21 @@ Object.assign(SCENES, {
   });
   $("#t-log").addEventListener("click", () => { const b = $("#logbox"); b.innerHTML = ""; log.slice(-150).forEach((l) => { const d = document.createElement("div"); d.className = "l" + (l.role === "c" ? " c" : ""); d.innerHTML = l.role === "c" ? "▶ " + esc(l.t) : l.role === "n" ? esc(l.t) : `<b>${esc(l.s)}</b> ${esc(l.t)}`; b.appendChild(d); }); openOv("ov-log"); const sh = $("#ov-log .sheet"); sh.scrollTop = sh.scrollHeight; });
   $("#t-set").addEventListener("click", () => openOv("ov-set"));
+  const GRADE_ORDER = ["S", "A", "B", "C", "D", "F", "히든"];
   function openGallery() {
     const got = loadJSON("garam_endings") || {}; const g = $("#gallery"); g.innerHTML = "";
-    $("#gal-count").textContent = `수집 ${Object.keys(got).filter((k) => SCENES[k]).length} / ${ENDING_IDS.length}`;
-    ENDING_IDS.forEach((id) => { const e = SCENES[id].ending; const d = document.createElement("div"); const has = !!got[id]; d.className = "g" + (has ? "" : " locked"); d.innerHTML = `<b>${has ? esc(e.grade) : "?"}</b><span>${has ? esc(e.title) : (e.hint ? esc(e.hint) : "아직 보지 못한 엔딩")}</span>`; g.appendChild(d); });
+    $("#gal-count").textContent = `모은 사진 ${Object.keys(got).filter((k) => SCENES[k] && SCENES[k].ending).length} / ${ENDING_IDS.length}`;
+    GRADE_ORDER.forEach((gr) => {
+      const ids = ENDING_IDS.filter((id) => SCENES[id].ending.grade === gr); if (!ids.length) return;
+      const sec = document.createElement("div"); sec.className = "gal-sec"; sec.textContent = `${gr}등급 · ${ids.filter((id) => got[id]).length}/${ids.length}`; g.appendChild(sec);
+      ids.forEach((id) => {
+        const e = SCENES[id].ending, has = !!got[id], d = document.createElement("button"); d.className = "g" + (has ? "" : " locked");
+        const src = has ? endingArt(id) : "";
+        d.innerHTML = (src ? `<img src="${esc(src)}" alt="" loading="lazy">` : `<div class="ph">?</div>`) + `<b>${has ? esc(e.grade) : "?"}</b><span>${has ? esc(e.title) : (e.hint ? esc(e.hint) : "아직 보지 못한 엔딩")}</span>`;
+        if (has) d.onclick = () => openPhoto(id); else d.disabled = true;
+        g.appendChild(d);
+      });
+    });
     openOv("ov-gal");
   }
   $("#b-gallery").addEventListener("click", openGallery);

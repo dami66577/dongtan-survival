@@ -30,6 +30,13 @@ for folder, grade in GRADES.items():
 for f in sorted((root / "art/bg").glob("*")):
     if f.suffix.lower() in exts:
         rel = f"img/bg/{f.stem}.webp"; convert(f, root / "dist" / rel, 1200); art["bg"][f.stem] = rel
+# 원본 art/ 폴더가 없으면 이미 배포된 docs/img 를 기준으로 매니페스트를 만든다 (그림을 지우지 않음)
+HAS_ART = (root / "art").exists()
+if not HAS_ART:
+    for grade_dir, grade in GRADES.items():
+        lst = sorted(f"img/end/{f.name}" for f in (root / "docs/img/end").glob(f"{grade_dir}-*.webp"))
+        if lst: art["end"][grade] = lst
+    for f in sorted((root / "docs/img/bg").glob("*.webp")): art["bg"][f.stem] = f"img/bg/{f.name}"
 manifest = "window.ART = " + json.dumps(art, ensure_ascii=False) + ";"
 out = tpl.replace("/*__CORE__*/", manifest + "\n" + core).replace("/*__CHAPTERS__*/", chapters)
 (root / "dist").mkdir(exist_ok=True)
@@ -51,7 +58,7 @@ pwa_head = ('<!doctype html><html lang="ko"><head><meta charset="utf-8">'
 docs = root / "docs"; docs.mkdir(exist_ok=True)
 (docs / "index.html").write_text(pwa_head + out + "</body></html>", encoding="utf-8")
 import shutil
-if (root / "dist/img").exists():
+if HAS_ART and (root / "dist/img").exists():
     if (docs / "img").exists(): shutil.rmtree(docs / "img")
     shutil.copytree(root / "dist/img", docs / "img")
 n_art = sum(len(v) for v in art["end"].values()) + len(art["bg"])
