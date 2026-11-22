@@ -33,7 +33,18 @@
         return !!Function("S", "has", "flag", "return (" + expr + ")")(S, (x) => S.items.includes(x), (n) => !!S.flags[n]);
       } catch (e) { console.warn("조건식 오류:", expr, e.message); return false; }
     },
-    sub(t) { return String(t).replace(/\{\{me\}\}/g, this.S.me).replace(/\{\{sib\}\}/g, this.S.sibName); },
+    sub(t) {
+      // 이름 뒤 조사를 받침에 맞게 고친다 (바다은 → 바다는, 하늘가 → 하늘이)
+      const S = this.S, PAIR = { "은": "는", "는": "은", "이": "가", "가": "이", "을": "를", "를": "을", "과": "와", "와": "과" }, HB = ["은", "이", "을", "과"];
+      const name = (k) => (k === "me" ? S.me : S.sibName);
+      return String(t).replace(/\{\{(me|sib)\}\}(은|는|이|가|을|를|과|와)(?![가-힣])/g, (m, k, p) => {
+        const n = name(k), c = n.charCodeAt(n.length - 1);
+        if (c < 0xac00 || c > 0xd7a3) return n + p;
+        const bat = (c - 0xac00) % 28 !== 0, want = HB.includes(p) === bat ? p : PAIR[p];
+        if (n === "나" && want === "가") return "내가";
+        return n + want;
+      }).replace(/\{\{me\}\}/g, S.me).replace(/\{\{sib\}\}/g, S.sibName);
+    },
 
     setPath(path, value) {
       const parts = path.split("."); let o = this.S;

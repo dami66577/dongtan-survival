@@ -352,7 +352,7 @@ Object.assign(SCENES, {
     choices: [
       { t: "나란히 상가로 간다 (도로를 경계로 11자처럼 나란히 선 상가 · 식량 · 도보 15분 · 반나절)", go: "mall_enter", if: "S.ap >= 2" },
       { t: "대학병원으로 간다 (의약품 · 도보 25분 · 반나절)", go: "hosp_enter", if: "S.ap >= 2" },
-      { t: "중학교으로 간다 (정보 · 도보 10분 · 반나절)", go: "school_enter", if: "S.ap >= 2" },
+      { t: "중학교로 간다 (정보 · 도보 10분 · 반나절)", go: "school_enter", if: "S.ap >= 2" },
       { t: "가람호수공원으로 간다 (물 · 텐트촌 · 도보 20분 · 반나절)", go: "lake_enter", if: "S.ap >= 2 && S.day >= 2" },
       { t: "가람역으로 간다 (북광장 · 위험 · 도보 30분 · 반나절)", go: "station_enter", if: "S.ap >= 2 && S.day >= 3" },
       { t: "주민센터에 들른다 (바로 옆 · 한나절)", go: "center_enter", if: "S.ap >= 1" },
