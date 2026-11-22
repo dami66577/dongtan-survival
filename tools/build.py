@@ -4,7 +4,7 @@ import pathlib, re, sys, hashlib
 root = pathlib.Path(__file__).resolve().parent.parent
 tpl = (root / "engine/ui.template.html").read_text(encoding="utf-8")
 core = (root / "engine/core.js").read_text(encoding="utf-8")
-order = sys.argv[1:] or ["home", "mall", "hosp", "school", "center", "lake", "station", "apt", "sys", "ending", "extra", "endings_extra"]
+order = sys.argv[1:] or ["home", "mall", "hosp", "school", "center", "lake", "station", "apt", "sys", "ending", "ending_dark", "extra", "endings_extra"]
 chapters = "\n".join((root / f"chapters/{n}.js").read_text(encoding="utf-8") for n in order if (root / f"chapters/{n}.js").exists())
 for src in (core, chapters):
     assert "</script" not in src.lower(), "스크립트 안에 </script> 문자열 금지"

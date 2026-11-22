@@ -92,6 +92,8 @@ Object.assign(SCENES, {
       { t: "[남는다] 나란히 상가 사람들에게 간다", go: "end_mall_go", if: "S.flags.mall_offer_stay && S.flags.mall_ally" },
       { t: "[남는다] 동생 학교 김 선생에게 간다", go: "end_school_go", if: "S.flags.school_offer_stay && S.flags.school_teacher_ally" },
       { t: "[걸어서] 아무 정보 없이 큰길 봉쇄선으로 간다", go: "end_walk_1", if: "!S.flags.center_backroad && !S.flags.info_route && !S.flags.parents_note", fx: { mind: -8 } },
+      { t: "[깍지] 깍지 패거리의 주유소로 간다 — 약도, 기름도 거기 있다", go: "end_gang_1", if: "S.flags.hosp_gang_seen && !S.flags.hosp_gang_enemy" },
+      { t: "[남는다] 아무 데도 가지 않는다. 문을 잠근다", go: "end_lock_1" },
     ],
   },
 

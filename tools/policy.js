@@ -2,7 +2,7 @@
 const fs=require("fs"),path=require("path"),vm=require("vm");
 const root=path.join(__dirname,"..");const ctx={console,SCENES:{}};ctx.globalThis=ctx;vm.createContext(ctx);
 vm.runInContext(fs.readFileSync(root+"/engine/core.js","utf8"),ctx);
-for(const n of ["home","mall","hosp","school","center","lake","station","apt","sys","ending","extra","endings_extra"]) vm.runInContext(fs.readFileSync(`${root}/chapters/${n}.js`,"utf8"),ctx);
+for(const n of ["home","mall","hosp","school","center","lake","station","apt","sys","ending","ending_dark","extra","endings_extra"]) vm.runInContext(fs.readFileSync(`${root}/chapters/${n}.js`,"utf8"),ctx);
 const {Core}=ctx; const N=Number(process.argv[2]||500); const ends={}; let foodLog=[];
 for(let w=0;w<N;w++){ let v=Core.newGame("나","동생"); let steps=0;
   while(steps++<3000 && !v.ending && !v.missing){

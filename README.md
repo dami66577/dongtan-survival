@@ -11,7 +11,8 @@ chapters/mall.js        나란히 상가 (식량)
 chapters/hosp.js        대학병원 (의약품 · 파란 상자 · 구급차)
 chapters/school.js      중학교 (정보 · 방송의 진실)
 chapters/center.js      가람 주민센터 (명단 · 열쇠 · 부모님 편지)
-chapters/ending.js      피날레 분기 + 엔딩 전부
+chapters/ending.js      피날레 분기 + 기본 엔딩
+chapters/ending_dark.js 어두운 큰 루트 (깍지 주유소 · 문을 잠근다)
 tools/validate.js       씬 링크·조건식 검사 + 랜덤 플레이 시뮬레이션
 tools/build.py          dist/index.html (아티팩트용) · dist/local.html (브라우저로 바로 열기)
 SPEC.md                 세계관 · 인물 · 플래그 · 씬 포맷 (씬을 추가할 때 이 문서 기준)

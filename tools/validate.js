@@ -9,7 +9,7 @@ const walkIdx = args.indexOf("--walk");
 const walks = walkIdx >= 0 ? Number(args[walkIdx + 1]) || 300 : 0;
 let files = args.filter((a) => a.endsWith(".js"));
 const root = path.join(__dirname, "..");
-if (!files.length) files = ["home", "mall", "hosp", "school", "center", "lake", "station", "apt", "sys", "ending", "extra", "endings_extra"].map((n) => `chapters/${n}.js`).filter((f) => fs.existsSync(path.join(root, f)));
+if (!files.length) files = ["home", "mall", "hosp", "school", "center", "lake", "station", "apt", "sys", "ending", "ending_dark", "extra", "endings_extra"].map((n) => `chapters/${n}.js`).filter((f) => fs.existsSync(path.join(root, f)));
 
 const ctx = { console, SCENES: {}, globalThis: null, module: undefined, window: undefined };
 ctx.globalThis = ctx;
