@@ -3,7 +3,7 @@ const { chromium } = require('playwright');
   const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 420, height: 800 }, deviceScaleFactor: 1, colorScheme: 'dark' });
   const errs = []; p.on('pageerror', e => errs.push(String(e))); p.on('console', m => { if (m.type() === 'error') errs.push(m.text()); });
   await p.goto('file:///home/user/dongtan-survival/dist/local.html');
-  await p.evaluate(() => { localStorage.clear(); localStorage.setItem('dongtan_settings', JSON.stringify({ speed: 0, size: 16, auto: 0 })); });
+  await p.evaluate(() => { localStorage.clear(); localStorage.setItem('garam_settings', JSON.stringify({ speed: 0, size: 16, auto: 0 })); });
   await p.reload(); await p.click('#tap-start'); await p.waitForTimeout(500); await p.fill('#in-me', '하늘'); await p.fill('#in-sib', '바다'); await p.click('#b-new'); await p.waitForTimeout(300);
   let scenes = 0, choicesSeen = 0;
   for (let i = 0; i < 400; i++) {

@@ -1,4 +1,4 @@
-/* ===== 동탄, 둘이서 — 코어 엔진 (DOM 없음; 브라우저/노드 공용) ===== */
+/* ===== 가람, 둘이서 — 코어 엔진 (DOM 없음; 브라우저/노드 공용) ===== */
 (function (root) {
   const SCENES = (root.SCENES = root.SCENES || {});
   const STAT_KEYS = ["hp", "sib", "trust", "mind"];

@@ -1,4 +1,4 @@
-// chapters/lake.js — 동탄호수공원 (물 · 텐트촌)
+// chapters/lake.js — 가람호수공원 (물 · 텐트촌)
 Object.assign(SCENES, {
   lake_enter: {
     bg: "street",

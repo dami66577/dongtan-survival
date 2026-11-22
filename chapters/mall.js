@@ -5,7 +5,7 @@ Object.assign(SCENES, {
     bg: "home",
     set: { "flags.went_mall": true, "flags.mall_visits": "+1", "flags.mall_sib_with": false },
     lines: [
-      { t: "현관문 앞. 배낭 지퍼를 올린다. 나란히 상가까지는 걸어서 15분. 동탄역 쪽으로 쭉 내려가면 된다.", if: "S.flags.mall_visits == 1" },
+      { t: "현관문 앞. 배낭 지퍼를 올린다. 나란히 상가까지는 걸어서 15분. 가람역 쪽으로 쭉 내려가면 된다.", if: "S.flags.mall_visits == 1" },
       { t: "다시 나란히 상가. 길은 이제 눈 감고도 가겠다.", if: "S.flags.mall_visits >= 2" },
       { s: "sib", t: "거기 치킨집 아직 있어? 아, 있을 리가 없지.", if: "S.flags.mall_visits == 1" },
       { s: "sib", t: "박 사장 아저씨 또 '어이, 학생' 할 거야. 백 퍼.", if: "S.flags.mall_visits >= 2 && S.flags.mall_ally" },
@@ -294,7 +294,7 @@ Object.assign(SCENES, {
       { t: "유나와 교역한다", go: "mall_trade" },
       { t: "박 사장의 일을 돕는다 (냉동고 정리)", go: "mall_freezer", if: "!S.flags.mall_freezer_done" },
       { t: "민재와 동생 사이에 끼어든다", go: "mall_minjae_banter", if: "S.flags.mall_sib_with" },
-      { t: "동탄 바깥 소식을 묻는다", go: "mall_news" },
+      { t: "가람 바깥 소식을 묻는다", go: "mall_news" },
     ],
   },
   mall_inside_cold: {
@@ -317,8 +317,8 @@ Object.assign(SCENES, {
     fx: { mind: 2 },
     lines: [
       { s: "me", t: "바깥은 어때요. 군대는요?" },
-      { s: "박 사장", t: "2주 전에 외곽으로 빠졌어. 동탄 전체가 봉쇄선 안이야. 우린 그냥… 안에 남은 거지." },
-      { s: "유나", t: "라디오에선 토요일 새벽마다 수원행 차량 어쩌고 하는데, 그거 믿고 나간 사람 둘 다 안 돌아왔어요." },
+      { s: "박 사장", t: "2주 전에 외곽으로 빠졌어. 가람 전체가 봉쇄선 안이야. 우린 그냥… 안에 남은 거지." },
+      { s: "유나", t: "라디오에선 토요일 새벽마다 해원행 차량 어쩌고 하는데, 그거 믿고 나간 사람 둘 다 안 돌아왔어요." },
       { s: "민재", t: "옆 학교 옥상에 안테나 세운 선생이 있대요. 거기 가면 뭔가 더 안대요. 가 본 적은 없지만." },
       { s: "박 사장", t: "그리고 병원엔 가지 마. 오토바이 타는 놈들이 약 쓸어가고 있어. 깍지라던가. 사람 죽였다는 소리도 있어." },
       { s: "sib", t: "…병원이요?", if: "S.flags.mall_sib_with && S.flags.sib_sick" },

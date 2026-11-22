@@ -1,4 +1,4 @@
-<title>동탄, 둘이서</title>
+<title>가람, 둘이서</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=Noto+Sans+KR:wght@300;400;500;700&display=swap">
 <style>
@@ -211,8 +211,8 @@ nav.tabs { display: grid; grid-template-columns: repeat(6, 1fr); height: var(--n
 <section id="title" class="screen on">
   <div class="ver">v2 · 한국 아포칼립스</div>
   <div class="logo">
-    <div class="eyebrow">한국 아포칼립스 · 화성시 동탄</div>
-    <h1>동탄,<br>둘이서</h1>
+    <div class="eyebrow">한국 아포칼립스 · 가람시</div>
+    <h1>가람,<br>둘이서</h1>
     <div class="sub">회색열로 전국이 멈춘 지 3주. 남은 건 동생과 나, 그리고 라디오 잡음.</div>
   </div>
   <div class="tap" id="tap-start">탭하여 시작</div>
@@ -271,7 +271,7 @@ nav.tabs { display: grid; grid-template-columns: repeat(6, 1fr); height: var(--n
 </section>
 
 <div class="toast" id="toast" role="status"><div class="ic">!</div><div><div class="h"><span>긴급재난문자</span><span id="toast-time"></span></div><div class="b" id="toast-body"></div></div></div>
-<div class="overlay" id="ov-map"><div class="sheet"><h2>동탄 <button class="x" data-close>닫기</button></h2><div class="muted" id="map-status"></div><div class="map" id="map"></div><div class="map-legend"><span><i class="h"></i>현재</span><span><i class="v"></i>가 본 곳</span><span><i></i>아직</span><span>· 반나절 = 행동력 2, 한나절 = 1</span></div></div></div>
+<div class="overlay" id="ov-map"><div class="sheet"><h2>가람 <button class="x" data-close>닫기</button></h2><div class="muted" id="map-status"></div><div class="map" id="map"></div><div class="map-legend"><span><i class="h"></i>현재</span><span><i class="v"></i>가 본 곳</span><span><i></i>아직</span><span>· 반나절 = 행동력 2, 한나절 = 1</span></div></div></div>
 <div class="overlay" id="ov-bag"><div class="sheet"><h2>가방 <button class="x" data-close>닫기</button></h2>
   <div class="items" id="bag-items"></div><div class="muted" id="bag-empty">아직 아무것도 없다.</div>
   <h3>알게 된 것</h3><div class="items" id="bag-info"></div><div class="muted" id="bag-info-empty">아는 게 없다. 밖에 나가봐야 한다.</div>
@@ -300,15 +300,17 @@ nav.tabs { display: grid; grid-template-columns: repeat(6, 1fr); height: var(--n
 /* ===== UI ===== */
 (function () {
   const $ = (s) => document.querySelector(s);
-  const BG_LABEL = { home: "집", street: "거리", mall: "나란히 상가", hosp: "대학병원", school: "중학교", center: "동탄 주민센터", lake: "동탄호수공원", station: "동탄역", apt: "아파트 단지", night: "밤", dream: "꿈" };
-  const INFO = { info_route: "동탄역 북광장 수송차량", info_time: "토요일 새벽 5시 (8일째)", info_fake: "그 방송은 녹음 반복이다", radio: "비상채널 99.9", hosp_ambulance: "병원 뒤 구급차", hosp_route_ready: "구급차 뒷길 루트", center_list: "생존자 명단 (부모님 없음)", parents_note: "부모님의 편지", school_amb_hint: "정우: 병원 뒤에 차가 있대", sib_sick: "동생: 회색열 고열", sib_cured: "동생: 치료됨", sib_bitten: "동생: 물림 (48시간)", me_bitten: "나: 물림 (48시간)" };
+  const BG_LABEL = { home: "집", street: "거리", mall: "나란히 상가", hosp: "대학병원", school: "중학교", center: "가람 주민센터", lake: "가람호수공원", station: "가람역", apt: "아파트 단지", night: "밤", dream: "꿈" };
+  const INFO = { info_route: "가람역 북광장 수송차량", info_time: "토요일 새벽 5시 (8일째)", info_fake: "그 방송은 녹음 반복이다", radio: "비상채널 99.9", hosp_ambulance: "병원 뒤 구급차", hosp_route_ready: "구급차 뒷길 루트", center_list: "생존자 명단 (부모님 없음)", parents_note: "부모님의 편지", school_amb_hint: "정우: 병원 뒤에 차가 있대", sib_sick: "동생: 회색열 고열", sib_cured: "동생: 치료됨", sib_bitten: "동생: 물림 (48시간)", me_bitten: "나: 물림 (48시간)" };
   const PEOPLE = { mall_ally: "박 사장 · 유나 · 민재 (나란히 상가)", mall_hostile: "상가 사람들과 적대", hosp_nurse_ally: "서은혜 간호사", hosp_gang_enemy: "깍지 패거리와 적대", school_teacher_ally: "김동현 선생", school_jungwoo_join: "정우 (우리 집에 합류)", school_jungwoo: "정우 (학교에 숨어 있음)", center_key: "최 주무관의 열쇠" };
   const ENDING_IDS = Object.keys(SCENES).filter((k) => SCENES[k].ending);
-  const SET = Object.assign({ speed: 1, size: 16, auto: 0, sfx: 0, vib: 1 }, loadJSON("dongtan_settings") || {});
+  const SET = Object.assign({ speed: 1, size: 16, auto: 0, sfx: 0, vib: 1 }, loadJSON("garam_settings") || {});
   if (SET.speed > 2) SET.speed = 1; // 구버전 설정 호환
   let view = null, lines = [], li = 0, log = [], busy = false, timer = null, curBg = null;
 
   function loadJSON(k) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : null; } catch (e) { return null; } }
+  // 이전 버전 저장 데이터 이전 (한 번만)
+  try { Object.keys(localStorage).filter((k) => k.indexOf("dongtan_") === 0).forEach((k) => { const n = "garam_" + k.slice(8); if (localStorage.getItem(n) == null) localStorage.setItem(n, localStorage.getItem(k)); localStorage.removeItem(k); }); } catch (e) {}
   function saveJSON(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { return false; } }
   function show(id) { ["title", "game", "ending"].forEach((s) => $("#" + s).classList.toggle("on", s === id)); }
   function openOv(id) { $("#" + id).classList.add("on"); } function closeOv() { document.querySelectorAll(".overlay.on").forEach((o) => o.classList.remove("on")); }
@@ -326,17 +328,17 @@ nav.tabs { display: grid; grid-template-columns: repeat(6, 1fr); height: var(--n
   $("#m-lines").textContent = allIds.reduce((a, k) => a + (SCENES[k].lines || []).length, 0);
   $("#m-choices").textContent = allIds.reduce((a, k) => a + (SCENES[k].choices || []).length, 0);
   $("#m-endings").textContent = ENDING_IDS.length;
-  function refreshTitle() { const a = loadJSON("dongtan_auto"); const b = $("#b-continue"); b.disabled = !a; b.textContent = a ? `이어하기 · D+${a.S.day} · ${a.S.me} · ${a.S.sibName}` : "이어하기"; }
+  function refreshTitle() { const a = loadJSON("garam_auto"); const b = $("#b-continue"); b.disabled = !a; b.textContent = a ? `이어하기 · D+${a.S.day} · ${a.S.me} · ${a.S.sibName}` : "이어하기"; }
   refreshTitle(); applySettings();
 
   /* --- 긴급재난문자 (한국식) --- */
   const ALERTS = {
     1: ["행정안전부", "전국 재난사태 3주차. 회색열 감염 의심자와 접촉 금지. 외출 자제, 창문 닫고 실내 대기 바랍니다."],
-    2: ["화성시청", "동탄 지역 급수 불안정. 수돗물은 끓여 드시고, 생수·빗물 비축 바랍니다. 쓰레기 배출 금지."],
+    2: ["가람시청", "가람 지역 급수 불안정. 수돗물은 끓여 드시고, 생수·빗물 비축 바랍니다. 쓰레기 배출 금지."],
     3: ["경기도청", "고열·피부 변색(잿빛) 증상자 발견 시 접근 금지. 격리 후 신고. 119·112는 통화량 폭주로 연결이 지연됩니다."],
     4: ["행정안전부", "통신망 축소 운영 중. 본 문자는 자동 발송되며 회신되지 않습니다. 야간 기온 영하, 저체온 주의."],
-    5: ["수원 비상대책본부", "매주 토요일 05:00 동탄역 북광장 수원행 수송차량 운행. 신분증 지참. 반복 안내."],
-    6: ["화성시청", "[송출 오류] 단지 내 방송설비 점검 바랍니다. 11월 분리수거 일정은 변동 없■■■■"],
+    5: ["해원 비상대책본부", "매주 토요일 05:00 가람역 북광장 해원행 수송차량 운행. 신분증 지참. 반복 안내."],
+    6: ["가람시청", "[송출 오류] 단지 내 방송설비 점검 바랍니다. 11월 분리수거 일정은 변동 없■■■■"],
     7: ["행정안전부", "■■■■ 발신 오류 ■■■■ 본 문자는 ■■■■■■ 자동 ■■■■"],
   };
   function toast(day) {
@@ -351,13 +353,13 @@ nav.tabs { display: grid; grid-template-columns: repeat(6, 1fr); height: var(--n
   /* --- 지도 --- */
   const NODES = [
     { id: "home", x: 50, y: 62, l: "집", ico: "⌂", go: null },
-    { id: "center", x: 62, y: 70, l: "동탄 주민센터", ico: "▦", go: "center_enter", flag: "went_center" },
+    { id: "center", x: 62, y: 70, l: "가람 주민센터", ico: "▦", go: "center_enter", flag: "went_center" },
     { id: "apt", x: 38, y: 72, l: "아파트 단지", ico: "▥", go: "apt_enter", flag: "went_apt" },
     { id: "mall", x: 30, y: 40, l: "나란히 상가", ico: "▤", go: "mall_enter", flag: "went_mall" },
     { id: "school", x: 72, y: 46, l: "중학교", ico: "▣", go: "school_enter", flag: "went_school" },
     { id: "hosp", x: 84, y: 22, l: "대학병원", ico: "✚", go: "hosp_enter", flag: "went_hosp" },
-    { id: "lake", x: 18, y: 86, l: "동탄호수공원", ico: "◌", go: "lake_enter", flag: "went_lake", day: 2 },
-    { id: "station", x: 22, y: 14, l: "동탄역 북광장", ico: "▬", go: "station_enter", flag: "went_station", day: 3, danger: true },
+    { id: "lake", x: 18, y: 86, l: "가람호수공원", ico: "◌", go: "lake_enter", flag: "went_lake", day: 2 },
+    { id: "station", x: 22, y: 14, l: "가람역 북광장", ico: "▬", go: "station_enter", flag: "went_station", day: 3, danger: true },
   ];
   function drawMap() {
     const S = Core.S, atHome = view && view.id === "home_hub";
@@ -421,7 +423,7 @@ nav.tabs { display: grid; grid-template-columns: repeat(6, 1fr); height: var(--n
     const col = $("#feedcol"); col.innerHTML = "";
     const tag = document.createElement("div"); tag.className = "scene-tag"; tag.textContent = (BG_LABEL[v.bg] || "· · ·"); col.appendChild(tag);
     $("#choicebox").innerHTML = "";
-    if (!v.ending) saveJSON("dongtan_auto", { S: Core.S, when: Date.now() });
+    if (!v.ending) saveJSON("garam_auto", { S: Core.S, when: Date.now() });
     if (v.ending) { v.lines.forEach((l) => log.push(l)); showEnding(v); return; }
     if ((v.id === "home_morning" || v.id === "p_start") && S.flags._alert_day !== S.day) { S.flags._alert_day = S.day; setTimeout(() => toast(S.day), 900); }
     if (!lines.length) finishLines(); else queueLine();
@@ -484,8 +486,8 @@ nav.tabs { display: grid; grid-template-columns: repeat(6, 1fr); height: var(--n
   /* --- 엔딩 --- */
   function showEnding(v) {
     const S = Core.S, e = v.ending;
-    const got = loadJSON("dongtan_endings") || {}; got[v.id] = { title: e.title, grade: e.grade, when: Date.now() }; saveJSON("dongtan_endings", got);
-    try { localStorage.removeItem("dongtan_auto"); } catch (err) {}
+    const got = loadJSON("garam_endings") || {}; got[v.id] = { title: e.title, grade: e.grade, when: Date.now() }; saveJSON("garam_endings", got);
+    try { localStorage.removeItem("garam_auto"); } catch (err) {}
     const g = $("#e-grade"); g.textContent = e.grade; g.className = "grade " + e.grade;
     const art = (window.ART && window.ART.end && window.ART.end[e.grade]) || [];
     const img = $("#e-art");
@@ -506,16 +508,16 @@ nav.tabs { display: grid; grid-template-columns: repeat(6, 1fr); height: var(--n
   function start(me, sib) { log = []; curBg = null; show("game"); render(Core.newGame(me, sib)); }
   $("#b-new").addEventListener("click", () => {
     const me = $("#in-me").value.trim() || "나", sib = $("#in-sib").value.trim() || "동생";
-    if (loadJSON("dongtan_auto")) confirmBox("새로 시작", "자동 저장된 진행이 지워집니다. 새로 시작할까요?", () => start(me, sib)); else start(me, sib);
+    if (loadJSON("garam_auto")) confirmBox("새로 시작", "자동 저장된 진행이 지워집니다. 새로 시작할까요?", () => start(me, sib)); else start(me, sib);
   });
-  $("#b-continue").addEventListener("click", () => { const a = loadJSON("dongtan_auto"); if (!a) return; log = []; curBg = null; show("game"); render(Core.load(a.S)); });
+  $("#b-continue").addEventListener("click", () => { const a = loadJSON("garam_auto"); if (!a) return; log = []; curBg = null; show("game"); render(Core.load(a.S)); });
   function confirmBox(title, msg, ok) { $("#c-title").textContent = title; $("#c-msg").textContent = msg; $("#c-ok").onclick = () => { closeOv(); ok(); }; openOv("ov-confirm"); }
   function renderSlots(inGame) {
     const box = $("#slots"); box.innerHTML = "";
     for (let i = 1; i <= 3; i++) {
-      const d = loadJSON("dongtan_slot" + i); const row = document.createElement("div"); row.className = "slot";
+      const d = loadJSON("garam_slot" + i); const row = document.createElement("div"); row.className = "slot";
       row.innerHTML = `<span>슬롯 ${i}<br><span class="muted">${d ? `D+${d.S.day} · ${esc(d.S.me)} & ${esc(d.S.sibName)} · ${new Date(d.when).toLocaleString("ko-KR")}` : "비어 있음"}</span></span>`;
-      const s = document.createElement("button"); s.className = "x"; s.textContent = "저장"; s.disabled = !inGame; s.onclick = () => { if (saveJSON("dongtan_slot" + i, { S: Core.S, when: Date.now() })) { buzz(8); renderSlots(inGame); } };
+      const s = document.createElement("button"); s.className = "x"; s.textContent = "저장"; s.disabled = !inGame; s.onclick = () => { if (saveJSON("garam_slot" + i, { S: Core.S, when: Date.now() })) { buzz(8); renderSlots(inGame); } };
       const l = document.createElement("button"); l.className = "x"; l.textContent = "불러오기"; l.disabled = !d; l.onclick = () => { closeOv(); log = []; curBg = null; show("game"); render(Core.load(d.S)); };
       row.appendChild(s); row.appendChild(l); box.appendChild(row);
     }
@@ -532,13 +534,13 @@ nav.tabs { display: grid; grid-template-columns: repeat(6, 1fr); height: var(--n
   $("#t-log").addEventListener("click", () => { const b = $("#logbox"); b.innerHTML = ""; log.slice(-150).forEach((l) => { const d = document.createElement("div"); d.className = "l" + (l.role === "c" ? " c" : ""); d.innerHTML = l.role === "c" ? "▶ " + esc(l.t) : l.role === "n" ? esc(l.t) : `<b>${esc(l.s)}</b> ${esc(l.t)}`; b.appendChild(d); }); openOv("ov-log"); const sh = $("#ov-log .sheet"); sh.scrollTop = sh.scrollHeight; });
   $("#t-set").addEventListener("click", () => openOv("ov-set"));
   function openGallery() {
-    const got = loadJSON("dongtan_endings") || {}; const g = $("#gallery"); g.innerHTML = "";
+    const got = loadJSON("garam_endings") || {}; const g = $("#gallery"); g.innerHTML = "";
     $("#gal-count").textContent = `수집 ${Object.keys(got).filter((k) => SCENES[k]).length} / ${ENDING_IDS.length}`;
     ENDING_IDS.forEach((id) => { const e = SCENES[id].ending; const d = document.createElement("div"); const has = !!got[id]; d.className = "g" + (has ? "" : " locked"); d.innerHTML = `<b>${has ? esc(e.grade) : "?"}</b><span>${has ? esc(e.title) : (e.hint ? esc(e.hint) : "아직 보지 못한 엔딩")}</span>`; g.appendChild(d); });
     openOv("ov-gal");
   }
   $("#b-gallery").addEventListener("click", openGallery);
-  document.querySelectorAll(".seg").forEach((seg) => seg.querySelectorAll("button").forEach((b) => b.addEventListener("click", () => { SET[seg.dataset.key] = Number(b.dataset.v); saveJSON("dongtan_settings", SET); applySettings(); if (seg.dataset.key === "sfx") beep(520, .1, .04); if (seg.dataset.key === "vib") buzz(20); })));
+  document.querySelectorAll(".seg").forEach((seg) => seg.querySelectorAll("button").forEach((b) => b.addEventListener("click", () => { SET[seg.dataset.key] = Number(b.dataset.v); saveJSON("garam_settings", SET); applySettings(); if (seg.dataset.key === "sfx") beep(520, .1, .04); if (seg.dataset.key === "vib") buzz(20); })));
   function applySettings() { document.querySelectorAll(".seg").forEach((seg) => seg.querySelectorAll("button").forEach((b) => b.classList.toggle("on", Number(b.dataset.v) === SET[seg.dataset.key]))); document.body.style.fontSize = SET.size + "px"; }
 
   /* --- 배경: 아파트 스카이라인 + 재 --- */

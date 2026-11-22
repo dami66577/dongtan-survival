@@ -1,12 +1,12 @@
-// chapters/station.js — 동탄역 (북광장의 버스 · 깍지 패거리 본거지). 가장 위험한 장소.
+// chapters/station.js — 가람역 (북광장의 버스 · 깍지 패거리 본거지). 가장 위험한 장소.
 Object.assign(SCENES, {
   station_enter: {
     bg: "street",
     set: { "flags.went_station": true, "flags.station_visits": "+1", "flags.station_sib_with": false },
     lines: [
-      { t: "동탄역. 걸어서 30분. 라디오가 말하는 그 북광장이 거기 있다.", if: "S.flags.station_visits == 1" },
+      { t: "가람역. 걸어서 30분. 라디오가 말하는 그 북광장이 거기 있다.", if: "S.flags.station_visits == 1" },
       { t: "지도에 연필로 동그라미 쳐 둔 곳. 가장 멀고, 가장 모르는 곳.", if: "S.flags.station_visits == 1 && has('지도')" },
-      { t: "다시 동탄역. 지난번 길은 몸이 기억하고 있었다.", if: "S.flags.station_visits >= 2" },
+      { t: "다시 가람역. 지난번 길은 몸이 기억하고 있었다.", if: "S.flags.station_visits >= 2" },
       { t: "비가 온다. 우산은 소리를 막는다. 소리를 못 들으면 죽는다. 우산은 두고 간다.", if: "S.weather == '비'" },
       { t: "눈이 쌓이기 시작했다. 발자국이 남는다는 뜻이다. 우리 것도, 다른 것들의 것도.", if: "S.weather == '눈' || S.weather == '첫눈'" },
       { s: "sib", t: "거기 버스 있다며. 진짜 있으면 어떡할 거야." },
@@ -56,7 +56,7 @@ Object.assign(SCENES, {
   station_road: {
     bg: "street",
     lines: [
-      { t: "큰길. 동탄역 방향으로 차들이 한 줄로 서 있다. 3주 전에 멈춘 그대로. 문이 열린 차, 닫힌 차, 뒤집힌 차." },
+      { t: "큰길. 가람역 방향으로 차들이 한 줄로 서 있다. 3주 전에 멈춘 그대로. 문이 열린 차, 닫힌 차, 뒤집힌 차." },
       { t: "고가 위에서 바람 소리가 난다. 바람 소리 사이에 다른 소리가 섞여 있다. 끌리는 소리." },
       { s: "sib", t: "저 차들 사이로 가면 안 보이겠다. 근데 저 안에 뭐가 있는지도 안 보이겠지.", if: "flag('station_sib_with')" },
       { t: "자전거가 있다. 고가 위 차도는 비어 있다. 빠르게 지나갈 수 있다.", if: "has('자전거')" },
@@ -69,7 +69,7 @@ Object.assign(SCENES, {
   },
   station_road_bridge: {
     lines: [
-      { t: "고가. 난간 너머로 동탄역 지붕이 보인다. 광장에 무언가 많이 모여 있다. 색은 하나. 잿빛." },
+      { t: "고가. 난간 너머로 가람역 지붕이 보인다. 광장에 무언가 많이 모여 있다. 색은 하나. 잿빛." },
       { t: "앞에서 둘. 회색인. 난간에 기대 선 채 천천히 이쪽으로 고개를 돌린다." },
       { s: "sib", t: "야. 둘이야. 둘은 어떻게 해.", if: "flag('station_sib_with')" },
     ],
@@ -168,8 +168,8 @@ Object.assign(SCENES, {
   station_arrive: {
     bg: "station",
     lines: [
-      { t: "동탄역. 유리 지붕이 반쯤 깨져 있다. 북광장에 버스 두 대. 하늘색 수원행. 그리고 그 주위에 서른쯤. 잿빛.", if: "S.flags.station_visits == 1" },
-      { t: "스피커. 『수원 비상대책본부입니다. 매주 토요일 05시, 동탄역 북광장에서…』 소리가 나면 잿빛 머리들이 일제히 버스 쪽을 본다.", if: "S.flags.station_visits == 1" },
+      { t: "가람역. 유리 지붕이 반쯤 깨져 있다. 북광장에 버스 두 대. 하늘색 해원행. 그리고 그 주위에 서른쯤. 잿빛.", if: "S.flags.station_visits == 1" },
+      { t: "스피커. 『해원 비상대책본부입니다. 매주 토요일 05시, 가람역 북광장에서…』 소리가 나면 잿빛 머리들이 일제히 버스 쪽을 본다.", if: "S.flags.station_visits == 1" },
       { s: "sib", t: "…저게 수송차량이야? 저 사람들이 다 타려고 기다리는 거야?", if: "S.flags.station_visits == 1 && flag('station_sib_with')" },
       { s: "me", t: "타려는 게 아니야. 소리 때문에 온 거야.", if: "S.flags.station_visits == 1 && flag('station_sib_with')" },
       { t: "북광장. 버스는 그대로. 잿빛은 더 늘었다.", if: "S.flags.station_visits >= 2 && !flag('station_speaker_off')" },
@@ -238,7 +238,7 @@ Object.assign(SCENES, {
     lines: [
       { t: "버스 안. 좌석마다 짐이 있다. 캐리어, 배낭, 아기 띠. 사람은 없다. 3주 전에 탔다가 3주 전에 내린 사람들." },
       { t: "맨 뒷좌석에 어린이 신발 한 짝. 분홍색. 다른 한 짝은 없다." },
-      { t: "운전석 위 안내문. 『수원 비상대책본부 수송 안내 — 11월 넷째 주 토요일 05:00 출발. 본 차량은 대기 차량임.』 날짜가 적혀 있다. 8일째 새벽이다.", set: { "flags.info_route": true, "flags.info_time": true } },
+      { t: "운전석 위 안내문. 『해원 비상대책본부 수송 안내 — 11월 넷째 주 토요일 05:00 출발. 본 차량은 대기 차량임.』 날짜가 적혀 있다. 8일째 새벽이다.", set: { "flags.info_route": true, "flags.info_time": true } },
       { s: "sib", t: "…넷째 주 토요일. 그게 이번 주지?", if: "flag('station_sib_with')" },
       { t: "운전석 아래 쪽지. 『연료 없음. 기사 없음. 오지 마세요. — 11/2』 연필 글씨가 뭉개져 있다." },
     ],
@@ -714,7 +714,7 @@ Object.assign(SCENES, {
     bg: "night",
     set: { "flags.station_roof_seen": true },
     lines: [
-      { t: "옥상. 해가 지고 있었다. 동탄이 발밑에 전부 있었다. 불 켜진 창은 세 개. 셀 수 있었다." },
+      { t: "옥상. 해가 지고 있었다. 가람이 발밑에 전부 있었다. 불 켜진 창은 세 개. 셀 수 있었다." },
       { t: "동남쪽. 지평선에 흰 불빛 한 줄. 검문소. 봉쇄선. 거기까지가 사람의 땅이다." },
       { s: "sib", t: "저기가 끝이야? 저기만 가면 돼?", if: "flag('station_sib_with')" },
       { s: "me", t: "저기까지가 문제야." },
@@ -770,7 +770,7 @@ Object.assign(SCENES, {
     lines: [
       { t: "돌아가는 길. 고가 위에서 광장을 한 번 더 봤다. 버스 두 대. 잿빛 서른." },
       { t: "방송이 들렸다. 내 목소리였다.", if: "flag('station_speaker_warned')" },
-      { t: "방송은 없었다. 대신 동탄 전체가 광장처럼 조용했다.", if: "flag('station_speaker_off')" },
+      { t: "방송은 없었다. 대신 가람 전체가 광장처럼 조용했다.", if: "flag('station_speaker_off')" },
       { s: "민재", t: "저 여기서 상가로 갈게요. 고마워요. 진짜로.", if: "flag('station_minjae_rescued') && !flag('station_minjae_thanked')", set: { "flags.station_minjae_thanked": true, "flags.mall_minjae_friend": true } },
       { s: "sib", t: "…토요일에 버스 안 오는 거, 이제 확실하지?", if: "flag('station_sib_with') && flag('info_fake')" },
       { s: "me", t: "확실해. 그러니까 다른 길로 가는 거야." },

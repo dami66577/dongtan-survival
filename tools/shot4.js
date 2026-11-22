@@ -4,7 +4,7 @@ const { chromium } = require('playwright');
   const errs = []; p.on('pageerror', e => errs.push(String(e)));
   await p.goto('file:///home/user/dongtan-survival/dist/local.html'); await p.waitForTimeout(500);
   await p.screenshot({ path: '/tmp/claude-0/-home-user/d8d7cc43-7102-5404-8cc9-e47456336749/scratchpad/t3.png' });
-  await p.evaluate(() => localStorage.setItem('dongtan_settings', JSON.stringify({ speed: 0, size: 16, auto: 0, sfx: 0, vib: 0 })));
+  await p.evaluate(() => localStorage.setItem('garam_settings', JSON.stringify({ speed: 0, size: 16, auto: 0, sfx: 0, vib: 0 })));
   await p.reload(); await p.click('#b-new'); await p.waitForTimeout(1200);
   await p.screenshot({ path: '/tmp/claude-0/-home-user/d8d7cc43-7102-5404-8cc9-e47456336749/scratchpad/toast.png' });
   // 허브까지 진행

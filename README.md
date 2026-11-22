@@ -1,6 +1,6 @@
-# 동탄, 둘이서 — 텍스트 아포칼립스 게임
+# 가람, 둘이서 — 텍스트 아포칼립스 게임
 
-한국 전역이 "회색열"로 무너진 지 3주. 화성시 동탄, 동탄 주민센터 옆 아파트에 남은 둘(나 + 중2 동생)의 생존기.
+한국 전역이 "회색열"로 무너진 지 3주. 가람시, 가람 주민센터 옆 아파트에 남은 둘(나 + 중2 동생)의 생존기.
 
 ## 구조
 ```
@@ -10,7 +10,7 @@ chapters/home.js        프롤로그 · 홈 허브 · 아침 · 동생 대화 ·
 chapters/mall.js        나란히 상가 (식량)
 chapters/hosp.js        대학병원 (의약품 · 파란 상자 · 구급차)
 chapters/school.js      중학교 (정보 · 방송의 진실)
-chapters/center.js      동탄 주민센터 (명단 · 열쇠 · 부모님 편지)
+chapters/center.js      가람 주민센터 (명단 · 열쇠 · 부모님 편지)
 chapters/ending.js      피날레 분기 + 엔딩 전부
 tools/validate.js       씬 링크·조건식 검사 + 랜덤 플레이 시뮬레이션
 tools/build.py          dist/index.html (아티팩트용) · dist/local.html (브라우저로 바로 열기)

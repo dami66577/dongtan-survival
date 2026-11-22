@@ -1,7 +1,7 @@
 {
-  "name": "동탄, 둘이서",
+  "name": "가람, 둘이서",
   "short_name": "둘이서",
-  "description": "한국 아포칼립스 텍스트 생존 게임. 동탄의 아파트에 남은 둘이 8일을 버틴다.",
+  "description": "한국 아포칼립스 텍스트 생존 게임. 가람의 아파트에 남은 둘이 8일을 버틴다.",
   "lang": "ko",
   "start_url": "./index.html",
   "scope": "./",
